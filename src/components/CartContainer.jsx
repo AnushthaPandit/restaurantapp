@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import { RiRefreshFill } from "react-icons/ri";
 
@@ -8,7 +9,8 @@ import { actionType } from "../context/reducer";
 import EmptyCart from "../img/emptyCart.svg";
 import CartItem from "./CartItem";
 
-const CartContainer = () => {
+const CartContainer = ({ isCheckout }) => {
+	const navigate = useNavigate();
 	const [{ cartShow, cartItems, user }, dispatch] = useStateValue();
 	const [flag, setFlag] = useState(1);
 	const [tot, setTot] = useState(0);
@@ -36,12 +38,16 @@ const CartContainer = () => {
 		localStorage.setItem("cartItems", JSON.stringify([]));
 	};
 
+	const checkout = () => {
+		navigate("/checkout/8989");
+	};
+
 	return (
 		<motion.div
 			initial={{ opacity: 0, x: 200 }}
 			animate={{ opacity: 1, x: 0 }}
 			exit={{ opacity: 0, x: 200 }}
-			className="fixed top-0 right-0 w-full md:w-375 h-screen bg-white drop-shadow-md flex flex-col z-[101]">
+			className={`fixed top-0 right-0 w-full md:w-375 h-screen bg-white drop-shadow-md flex flex-col z-[101]`}>
 			<div className="w-full flex items-center justify-between p-4 cursor-pointer">
 				<motion.div whileTap={{ scale: 0.75 }} onClick={showCart}>
 					<MdOutlineKeyboardBackspace className="text-textColor text-3xl" />
@@ -97,6 +103,7 @@ const CartContainer = () => {
 						{user ? (
 							<motion.button
 								whileTap={{ scale: 0.8 }}
+								onClick={checkout}
 								type="button"
 								className="w-full p-2 rounded-full bg-gradient-to-tr from-orange-400 to-orange-600 text-gray-50 text-lg my-2 hover:shadow-lg">
 								Check Out

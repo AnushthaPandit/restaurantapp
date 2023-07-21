@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { CreateContainer, Header, MainContainer } from "./components";
 import RestaurantList from "./pages/RestaurantList";
+import Checkout from "./pages/Checkout";
 import { useStateValue } from "./context/StateProvider";
 import { getAllFoodItems } from "./utils/firebaseFunctions";
 import { actionType } from "./context/reducer";
@@ -32,6 +33,7 @@ const App = () => {
 					<Routes>
 						<Route path="/" element={<RestaurantList />} />
 						<Route path="/restaurant/:slug" element={<MainContainer />} />
+						<Route path="/checkout/:id" element={<Checkout />} />
 						<Route path="/createItem" element={<CreateContainer />} />
 					</Routes>
 				</main>
