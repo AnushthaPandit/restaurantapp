@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { MdShoppingBasket, MdAdd, MdLogout } from "react-icons/md";
+import { BiRestaurant } from "react-icons/bi";
 import { motion } from "framer-motion";
 
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
@@ -108,15 +109,22 @@ const Header = () => {
 								exit={{ opacity: 0, scale: 0.6 }}
 								className="w-40 bg-gray-50 shadow-xl rounded-lg flex flex-col absolute top-12 right-0">
 								{user && user.email === "kumarsen.bash@gmail.com" && (
-									<Link to={"/createItem"}>
-										<p
-											className="px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-all duration-100 ease-in-out text-textColor text-base"
-											onClick={() => setIsMenu(false)}>
-											New Item <MdAdd />
-										</p>
-									</Link>
+									<>
+										<Link to={"/createItem"}>
+											<p
+												className="px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-all duration-100 ease-in-out text-textColor text-base"
+												onClick={() => setIsMenu(false)}>
+												New Item <MdAdd />
+											</p>
+										</Link>
+									</>
 								)}
 
+								<Link to={"/restaurant-login"}>
+									<p className="px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-all duration-100 ease-in-out text-textColor text-base">
+										Restaurant Login <BiRestaurant />
+									</p>
+								</Link>
 								<p
 									className="px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-all duration-100 ease-in-out text-textColor text-base"
 									onClick={logout}>

@@ -4,6 +4,7 @@ import { AnimatePresence } from "framer-motion";
 import { CreateContainer, Header, MainContainer } from "./components";
 import RestaurantList from "./pages/RestaurantList";
 import Checkout from "./pages/Checkout";
+import RestLogin from "./pages/RestLogin";
 import { useStateValue } from "./context/StateProvider";
 import { getAllFoodItems } from "./utils/firebaseFunctions";
 import { actionType } from "./context/reducer";
@@ -32,6 +33,7 @@ const App = () => {
 				<main className="mt-14 md:mt-20 px-4 md:px-16 py-4 w-full">
 					<Routes>
 						<Route path="/" element={<RestaurantList />} />
+						<Route path="/restaurant-login" element={<RestLogin />} />
 						<Route path="/restaurant/:slug" element={<MainContainer />} />
 						<Route path="/checkout/:id" element={<Checkout />} />
 						<Route path="/createItem" element={<CreateContainer />} />
