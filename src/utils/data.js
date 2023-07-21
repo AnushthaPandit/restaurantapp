@@ -12,6 +12,7 @@ export const heroData = [
 		price: "5.25",
 		imageURL: "/imgs/ice-creame.png",
 		imageSrc: I1,
+		qty: 1,
 	},
 	{
 		id: 2,
@@ -21,6 +22,7 @@ export const heroData = [
 		imageURL: "/imgs/strawberry.png",
 		category: "curry",
 		imageSrc: F1,
+		qty: 1,
 	},
 	{
 		id: 3,
@@ -30,6 +32,7 @@ export const heroData = [
 		imageURL: "/imgs/c3.png",
 		category: "rice",
 		imageSrc: F1,
+		qty: 1,
 	},
 	{
 		id: 4,
@@ -39,6 +42,7 @@ export const heroData = [
 		imageURL: "/imgs/fish.png",
 		category: "fish",
 		imageSrc: F1,
+		qty: 1,
 	},
 	{
 		id: 5,
@@ -48,6 +52,7 @@ export const heroData = [
 		imageURL: "/imgs/strawberry.png",
 		category: "fruits",
 		imageSrc: F1,
+		qty: 1,
 	},
 	{
 		id: 6,
@@ -57,6 +62,7 @@ export const heroData = [
 		price: "5.25",
 		imageURL: "/imgs/ice-creame.png",
 		imageSrc: F1,
+		qty: 1,
 	},
 	{
 		id: 6,
@@ -66,6 +72,7 @@ export const heroData = [
 		price: "5.25",
 		imageURL: "/imgs/ice-creame.png",
 		imageSrc: F1,
+		qty: 1,
 	},
 ];
 

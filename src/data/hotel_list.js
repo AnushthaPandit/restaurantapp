@@ -15,6 +15,7 @@ const hotel_list = [
 				decp: "Tasty Pani puri",
 				price: "5.25",
 				imageSrc: "/imgs/panipuri.png",
+				qty: 1,
 			},
 			{
 				id: 2,
@@ -22,6 +23,7 @@ const hotel_list = [
 				decp: "Fresh Samosa",
 				price: "10.25",
 				imageSrc: "/imgs/samosa.png",
+				qty: 1,
 			},
 			{
 				id: 3,
@@ -29,6 +31,7 @@ const hotel_list = [
 				decp: "Fresh Plate",
 				price: "8.25",
 				imageSrc: "/imgs/aloo-chop.png",
+				qty: 1,
 			},
 			{
 				id: 4,
@@ -36,6 +39,7 @@ const hotel_list = [
 				decp: "Mixed Litti Chokha",
 				price: "5.25",
 				imageSrc: "/imgs/litti.png",
+				qty: 1,
 			},
 		],
 	},
@@ -55,6 +59,7 @@ const hotel_list = [
 				decp: "Chocolate & vanilla",
 				price: "5.25",
 				imageSrc: "/imgs/ice-creame.png",
+				qty: 1,
 			},
 			{
 				id: 2,
@@ -62,6 +67,7 @@ const hotel_list = [
 				decp: "Fresh Strawberries",
 				price: "10.25",
 				imageSrc: "/imgs/strawberry.png",
+				qty: 1,
 			},
 			{
 				id: 3,
@@ -69,6 +75,7 @@ const hotel_list = [
 				decp: "Mixed Kebab Plate",
 				price: "8.25",
 				imageSrc: "/imgs/c3.png",
+				qty: 1,
 			},
 			{
 				id: 4,
@@ -76,6 +83,7 @@ const hotel_list = [
 				decp: "Mixed Fish Kebab",
 				price: "5.25",
 				imageSrc: "/imgs/fish.png",
+				qty: 1,
 			},
 		],
 	},
