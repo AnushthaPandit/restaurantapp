@@ -56,33 +56,37 @@ const Sidebar = () => {
 					Orders
 				</p>
 
-				<div className="flex items-center justify-between gap-[10px] py-[15px] cursor-pointer">
+				<Link
+					to="/rest-order-list"
+					className="flex items-center justify-between gap-[10px] py-[15px] cursor-pointer">
 					<div className="flex items-center gap-[10px] text-white">
 						<FaRegCalendar />
 						<p className="text-[14px] leading-7 font-normal">Orders</p>
 					</div>
 					<FaChevronRight color="white" />
-				</div>
+				</Link>
 			</div>
 			<div className="pt-[15px] border-b-[2px] border-[#EDEDED]/[0.3]">
 				<p className="text-[14px] font-extrabold leading-[16px] text-white/[0.4]">
 					Profile
 				</p>
 
-				<div className="flex items-center justify-between gap-[10px] py-[15px] cursor-pointer">
+				<Link
+					to="/rest-profile-details"
+					className="flex items-center justify-between gap-[10px] py-[15px] cursor-pointer">
 					<div className="flex items-center gap-[10px] text-white">
 						<FaRegSun />
 						<p className="text-[14px] leading-7 font-normal">Profile Details</p>
 					</div>
 					<FaChevronRight color="white" />
-				</div>
-				<div className="flex items-center justify-between gap-[10px] py-[15px] cursor-pointer">
+				</Link>
+				{/* <div className="flex items-center justify-between gap-[10px] py-[15px] cursor-pointer">
 					<div className="flex items-center gap-[10px] text-white">
 						<FaWrench />
 						<p className="text-[14px] leading-7 font-normal">Account Details</p>
 					</div>
 					<FaChevronRight color="white" />
-				</div>
+				</div> */}
 			</div>
 		</div>
 	);

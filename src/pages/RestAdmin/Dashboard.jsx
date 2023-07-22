@@ -7,7 +7,7 @@ import RestPageContainer from "../../components/RestPage.container";
 
 const Dashboard = () => {
 	return (
-		<RestPageContainer>
+		<RestPageContainer name={"Dashboard"}>
 			<div className="pt-[25px] px-[25px]">
 				<div className="flex items-center justify-between">
 					<h1 className="text-[#5a5c69] text-[25px] leading-[34px] font-medium cursor-pointer">

@@ -149,7 +149,7 @@ const AddFood = () => {
 	};
 
 	return (
-		<RestPage>
+		<RestPage name="Add Food Item">
 			<div className="w-full flex items-center justify-center">
 				<div className="w-[90%] md:w-[50%] border border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center gap-4">
 					{fields && (

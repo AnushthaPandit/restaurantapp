@@ -2,10 +2,11 @@ import React from "react";
 // import { FaEnvelope, FaRegBell, FaSearch } from "react-icons/fa";
 import Profile from "../img/avatar.png";
 
-const Dashboard = () => {
+const RestHeader = ({ name }) => {
 	return (
 		<div className="flex items-center justify-between h-[70px] shadow-md px-[25px]">
 			<div className="flex items-center rounded-sm">
+				<h2 className="text-2xl">{name}</h2>
 				{/* <input
 					type="search"
 					className="bg-[#F8F9FC] h-[35px] outline-none pl-[13px] w-[300px] rounded-md placeholder:text-[14px] leading-[20px] font-normal"
@@ -36,4 +37,4 @@ const Dashboard = () => {
 	);
 };
 
-export default Dashboard;
+export default RestHeader;

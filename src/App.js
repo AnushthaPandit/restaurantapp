@@ -9,6 +9,8 @@ import RestLogin from "./pages/RestLogin";
 import Dashboard from "./pages/RestAdmin/Dashboard";
 import FoodList from "./pages/RestAdmin/FoodList";
 import AddFood from "./pages/RestAdmin/AddFood";
+import ProfileDetails from "./pages/RestAdmin/ProfileDetails";
+import OrdersList from "./pages/RestAdmin/OrdersList";
 import { useStateValue } from "./context/StateProvider";
 import { getAllFoodItems } from "./utils/firebaseFunctions";
 import { actionType } from "./context/reducer";
@@ -41,6 +43,8 @@ const App = () => {
 					<Route path="/rest-admin" element={<Dashboard />} />
 					<Route path="/rest-food-list" element={<FoodList />} />
 					<Route path="/rest-add-food" element={<AddFood />} />
+					<Route path="/rest-order-list" element={<OrdersList />} />
+					<Route path="/rest-profile-details" element={<ProfileDetails />} />
 				</Routes>
 			</div>
 		</AnimatePresence>

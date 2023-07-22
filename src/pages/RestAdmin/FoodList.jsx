@@ -4,7 +4,7 @@ import RestPageContainer from "../../components/RestPage.container";
 
 const FoodList = () => {
 	return (
-		<RestPageContainer>
+		<RestPageContainer name="Food List">
 			<div className="pt-[25px] px-[25px]">
 				<h1 className="text-xl my-5">Food Items</h1>
 				<div className="relative overflow-x-auto shadow-md sm:rounded-lg">
