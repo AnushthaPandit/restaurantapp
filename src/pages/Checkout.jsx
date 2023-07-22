@@ -1,8 +1,10 @@
 import React from "react";
 
+import CustomerPage from "../components/CustomerPage.container";
+
 const Checkout = () => {
 	return (
-		<div>
+		<CustomerPage>
 			<div className="mt-20">
 				<h1 className="flex items-center justify-center font-bold text-orange-600 text-md lg:text-2xl">
 					Your food is almost there.. but where? give me your address!
@@ -218,7 +220,7 @@ const Checkout = () => {
 					</div>
 				</div>
 			</div>
-		</div>
+		</CustomerPage>
 	);
 };
 

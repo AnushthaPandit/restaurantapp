@@ -4,7 +4,9 @@ import { AnimatePresence } from "framer-motion";
 import { CreateContainer, Header, MainContainer } from "./components";
 import RestaurantList from "./pages/RestaurantList";
 import Checkout from "./pages/Checkout";
+import RestDetails from "./pages/RestDetails";
 import RestLogin from "./pages/RestLogin";
+import Dashboard from "./pages/RestAdmin/Dashboard";
 import { useStateValue } from "./context/StateProvider";
 import { getAllFoodItems } from "./utils/firebaseFunctions";
 import { actionType } from "./context/reducer";
@@ -28,17 +30,14 @@ const App = () => {
 	return (
 		<AnimatePresence exitBeforeEnter>
 			<div className="w-screen h-auto flex flex-col bg-primary">
-				<Header />
-
-				<main className="mt-14 md:mt-20 px-4 md:px-16 py-4 w-full">
-					<Routes>
-						<Route path="/" element={<RestaurantList />} />
-						<Route path="/restaurant-login" element={<RestLogin />} />
-						<Route path="/restaurant/:slug" element={<MainContainer />} />
-						<Route path="/checkout/:id" element={<Checkout />} />
-						<Route path="/createItem" element={<CreateContainer />} />
-					</Routes>
-				</main>
+				<Routes>
+					<Route path="/" element={<RestaurantList />} />
+					<Route path="/restaurant-login" element={<RestLogin />} />
+					<Route path="/restaurant/:slug" element={<RestDetails />} />
+					<Route path="/checkout/:id" element={<Checkout />} />
+					<Route path="/createItem" element={<CreateContainer />} />
+					<Route path="/rest-admin" element={<Dashboard />} />
+				</Routes>
 			</div>
 		</AnimatePresence>
 	);
