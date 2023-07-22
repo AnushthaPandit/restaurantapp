@@ -11,6 +11,7 @@ import FoodList from "./pages/RestAdmin/FoodList";
 import AddFood from "./pages/RestAdmin/AddFood";
 import ProfileDetails from "./pages/RestAdmin/ProfileDetails";
 import OrdersList from "./pages/RestAdmin/OrdersList";
+import AdminDash from "./pages/Admin";
 import { useStateValue } from "./context/StateProvider";
 import { getAllFoodItems } from "./utils/firebaseFunctions";
 import { actionType } from "./context/reducer";
@@ -36,15 +37,15 @@ const App = () => {
 			<div className="w-screen h-auto flex flex-col bg-primary">
 				<Routes>
 					<Route path="/" element={<RestaurantList />} />
-					<Route path="/restaurant-login" element={<RestLogin />} />
 					<Route path="/restaurant/:slug" element={<RestDetails />} />
 					<Route path="/checkout/:id" element={<Checkout />} />
-					<Route path="/createItem" element={<CreateContainer />} />
+					<Route path="/restaurant-login" element={<RestLogin />} />
 					<Route path="/rest-admin" element={<Dashboard />} />
 					<Route path="/rest-food-list" element={<FoodList />} />
 					<Route path="/rest-add-food" element={<AddFood />} />
 					<Route path="/rest-order-list" element={<OrdersList />} />
 					<Route path="/rest-profile-details" element={<ProfileDetails />} />
+					<Route path="/admin" element={<AdminDash />} />
 				</Routes>
 			</div>
 		</AnimatePresence>
