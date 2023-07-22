@@ -3,12 +3,11 @@ import {
 	FaPlusCircle,
 	FaChevronRight,
 	FaRegCalendar,
-	FaRegChartBar,
 	FaRegSun,
-	FaStickyNote,
 	FaTachometerAlt,
 	FaWrench,
 } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
 	return (
@@ -21,9 +20,11 @@ const Sidebar = () => {
 
 			<div className="flex items-center gap-[15px] py-[15px] border-b-[2px] border-[#EDEDED]/[0.3] text-white">
 				<FaTachometerAlt />
-				<p className="text-[14px] font-bold leading-[20px] text-white">
-					Dashboard
-				</p>
+				<Link to={"/rest-admin"}>
+					<p className="text-[14px] font-bold leading-[20px] text-white">
+						Dashboard
+					</p>
+				</Link>
 			</div>
 
 			<div className="pt-[15px] border-b-[2px] border-[#EDEDED]/[0.3]">
@@ -31,20 +32,24 @@ const Sidebar = () => {
 					Food
 				</p>
 
-				<div className="flex items-center justify-between gap-[10px] py-[15px] cursor-pointer">
+				<Link
+					to="/rest-food-list"
+					className="flex items-center justify-between gap-[10px] py-[15px] cursor-pointer">
 					<div className="flex items-center gap-[10px] text-white">
 						<FaRegCalendar />
 						<p className="text-[14px] leading-7 font-normal">Food Items</p>
 					</div>
 					<FaChevronRight color="white" />
-				</div>
-				<div className="flex items-center justify-between gap-[10px] py-[15px] cursor-pointer">
+				</Link>
+				<Link
+					to={"/rest-add-food"}
+					className="flex items-center justify-between gap-[10px] py-[15px] cursor-pointer">
 					<div className="flex items-center gap-[10px] text-white">
 						<FaPlusCircle />
 						<p className="text-[14px] leading-7 font-normal">Add Items</p>
 					</div>
 					<FaChevronRight color="white" />
-				</div>
+				</Link>
 			</div>
 			<div className="pt-[15px] border-b-[2px] border-[#EDEDED]/[0.3]">
 				<p className="text-[14px] font-extrabold leading-[16px] text-white/[0.4]">

@@ -2,12 +2,13 @@ import React from "react";
 import { FaEllipsisV, FaRegCalendarMinus } from "react-icons/fa";
 import { BiStats } from "react-icons/bi";
 import PieComponent from "./PieComponent";
+
 import RestPageContainer from "../../components/RestPage.container";
 
 const Dashboard = () => {
 	return (
 		<RestPageContainer>
-			<div className="pt-[25px] px-[25px] bg-[#F8F9FC]">
+			<div className="pt-[25px] px-[25px]">
 				<div className="flex items-center justify-between">
 					<h1 className="text-[#5a5c69] text-[25px] leading-[34px] font-medium cursor-pointer">
 						Dashboard

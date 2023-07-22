@@ -7,6 +7,8 @@ import Checkout from "./pages/Checkout";
 import RestDetails from "./pages/RestDetails";
 import RestLogin from "./pages/RestLogin";
 import Dashboard from "./pages/RestAdmin/Dashboard";
+import FoodList from "./pages/RestAdmin/FoodList";
+import AddFood from "./pages/RestAdmin/AddFood";
 import { useStateValue } from "./context/StateProvider";
 import { getAllFoodItems } from "./utils/firebaseFunctions";
 import { actionType } from "./context/reducer";
@@ -37,6 +39,8 @@ const App = () => {
 					<Route path="/checkout/:id" element={<Checkout />} />
 					<Route path="/createItem" element={<CreateContainer />} />
 					<Route path="/rest-admin" element={<Dashboard />} />
+					<Route path="/rest-food-list" element={<FoodList />} />
+					<Route path="/rest-add-food" element={<AddFood />} />
 				</Routes>
 			</div>
 		</AnimatePresence>
