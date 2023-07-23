@@ -22,7 +22,7 @@ const AdminHeader = ({ name }) => {
 					{/* <FaRegBell />
 					<FaEnvelope /> */}
 				</div>
-				<div className="flex items-center gap-5 relative">
+				{/* <div className="flex items-center gap-5 relative">
 					<p>Restaurant User</p>
 					<div className=" cursor-pointer flex items-center justify-center relative">
 						<img
@@ -31,7 +31,7 @@ const AdminHeader = ({ name }) => {
 							className="w-[50px] h-[50px] rounded-full"
 						/>
 					</div>
-				</div>
+				</div> */}
 			</div>
 		</div>
 	);

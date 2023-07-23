@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import { CreateContainer, Header, MainContainer } from "./components";
 import RestaurantList from "./pages/RestaurantList";
 import Checkout from "./pages/Checkout";
 import RestDetails from "./pages/RestDetails";
@@ -11,13 +10,18 @@ import FoodList from "./pages/RestAdmin/FoodList";
 import AddFood from "./pages/RestAdmin/AddFood";
 import ProfileDetails from "./pages/RestAdmin/ProfileDetails";
 import OrdersList from "./pages/RestAdmin/OrdersList";
-import AdminDash from "./pages/Admin";
+import AdminDash from "./pages/Admin/Dashboard";
+import AdminRestList from "./pages/Admin/RestList";
+import AdminOrdersList from "./pages/Admin/OrdersList";
+import AdminUserList from "./pages/Admin/UserList";
+import AdminUserOrderList from "./pages/Admin/UserOrderList";
+import OrderDeatils from "./pages/OrderDeatils";
 import { useStateValue } from "./context/StateProvider";
 import { getAllFoodItems } from "./utils/firebaseFunctions";
 import { actionType } from "./context/reducer";
 
 const App = () => {
-	const [{ foodItems }, dispatch] = useStateValue();
+	const [dispatch] = useStateValue();
 
 	const fetchData = async () => {
 		await getAllFoodItems().then((data) => {
@@ -46,6 +50,14 @@ const App = () => {
 					<Route path="/rest-order-list" element={<OrdersList />} />
 					<Route path="/rest-profile-details" element={<ProfileDetails />} />
 					<Route path="/admin" element={<AdminDash />} />
+					<Route path="/admin-rest-list" element={<AdminRestList />} />
+					<Route path="/admin-orders-list" element={<AdminOrdersList />} />
+					<Route path="/admin-users-list" element={<AdminUserList />} />
+					<Route
+						path="/admin-user-order-list/:id"
+						element={<AdminUserOrderList />}
+					/>
+					<Route path="/order-details/:id" element={<OrderDeatils />} />
 				</Routes>
 			</div>
 		</AnimatePresence>

@@ -1,11 +1,10 @@
 import React from "react";
 import {
-	FaPlusCircle,
+	FaUsers,
 	FaChevronRight,
 	FaRegCalendar,
 	FaRegSun,
 	FaTachometerAlt,
-	FaWrench,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -20,7 +19,7 @@ const AdminSidebar = () => {
 
 			<div className="flex items-center gap-[15px] py-[15px] border-b-[2px] border-[#EDEDED]/[0.3] text-white">
 				<FaTachometerAlt />
-				<Link to={"/rest-admin"}>
+				<Link to={"/admin"}>
 					<p className="text-[14px] font-bold leading-[20px] text-white">
 						Dashboard
 					</p>
@@ -29,24 +28,15 @@ const AdminSidebar = () => {
 
 			<div className="pt-[15px] border-b-[2px] border-[#EDEDED]/[0.3]">
 				<p className="text-[14px] font-extrabold leading-[16px] text-white/[0.4]">
-					Food
+					Restaurants
 				</p>
 
 				<Link
-					to="/rest-food-list"
+					to="/admin-rest-list"
 					className="flex items-center justify-between gap-[10px] py-[15px] cursor-pointer">
 					<div className="flex items-center gap-[10px] text-white">
 						<FaRegCalendar />
-						<p className="text-[14px] leading-7 font-normal">Food Items</p>
-					</div>
-					<FaChevronRight color="white" />
-				</Link>
-				<Link
-					to={"/rest-add-food"}
-					className="flex items-center justify-between gap-[10px] py-[15px] cursor-pointer">
-					<div className="flex items-center gap-[10px] text-white">
-						<FaPlusCircle />
-						<p className="text-[14px] leading-7 font-normal">Add Items</p>
+						<p className="text-[14px] leading-7 font-normal">Restaurants</p>
 					</div>
 					<FaChevronRight color="white" />
 				</Link>
@@ -57,7 +47,7 @@ const AdminSidebar = () => {
 				</p>
 
 				<Link
-					to="/rest-order-list"
+					to="/admin-orders-list"
 					className="flex items-center justify-between gap-[10px] py-[15px] cursor-pointer">
 					<div className="flex items-center gap-[10px] text-white">
 						<FaRegCalendar />
@@ -68,15 +58,15 @@ const AdminSidebar = () => {
 			</div>
 			<div className="pt-[15px] border-b-[2px] border-[#EDEDED]/[0.3]">
 				<p className="text-[14px] font-extrabold leading-[16px] text-white/[0.4]">
-					Profile
+					Users
 				</p>
 
 				<Link
-					to="/rest-profile-details"
+					to="/admin-users-list"
 					className="flex items-center justify-between gap-[10px] py-[15px] cursor-pointer">
 					<div className="flex items-center gap-[10px] text-white">
-						<FaRegSun />
-						<p className="text-[14px] leading-7 font-normal">Profile Details</p>
+						<FaUsers />
+						<p className="text-[14px] leading-7 font-normal">Users List</p>
 					</div>
 					<FaChevronRight color="white" />
 				</Link>
