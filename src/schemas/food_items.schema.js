@@ -27,8 +27,19 @@ export const fetchAllFoodItemsData = async (uid) => {
 
 	const da = [];
 	querySnapshot.forEach((doc) => {
-		da.push(doc.data());
+		da.push({ ...doc.data(), doc_id: doc.id });
 	});
 
 	return da;
+};
+
+export const fetchFoodItemsDetails = async (id) => {
+	const docRef = doc(firestore, food_items_schema.name, id);
+	const docSnap = await getDoc(docRef);
+
+	if (docSnap.exists()) {
+		return docSnap.data();
+	} else {
+		return null;
+	}
 };

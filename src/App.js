@@ -9,6 +9,7 @@ import RestLogin from "./pages/RestLogin";
 import Dashboard from "./pages/RestAdmin/Dashboard";
 import FoodList from "./pages/RestAdmin/FoodList";
 import AddFood from "./pages/RestAdmin/AddFood";
+import EditFoodItem from "./pages/RestAdmin/EditFoodItem";
 import ProfileDetails from "./pages/RestAdmin/ProfileDetails";
 import OrdersList from "./pages/RestAdmin/OrdersList";
 import AdminDash from "./pages/Admin/Dashboard";
@@ -75,6 +76,14 @@ const App = () => {
 						element={
 							<PrivateRoute role="restUser">
 								<AddFood />
+							</PrivateRoute>
+						}
+					/>
+					<Route
+						path="/rest-food-item/:id/edit"
+						element={
+							<PrivateRoute role="restUser">
+								<EditFoodItem />
 							</PrivateRoute>
 						}
 					/>
