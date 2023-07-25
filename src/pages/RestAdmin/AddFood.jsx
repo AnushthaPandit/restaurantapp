@@ -1,6 +1,11 @@
 import React, { useState } from "react";
+import {
+	deleteObject,
+	getDownloadURL,
+	ref,
+	uploadBytesResumable,
+} from "firebase/storage";
 import { motion } from "framer-motion";
-
 import {
 	MdFastfood,
 	MdCloudUpload,
@@ -8,14 +13,11 @@ import {
 	MdFoodBank,
 	MdAttachMoney,
 } from "react-icons/md";
+import { FaPoundSign } from "react-icons/fa";
+
 import { categories } from "../../utils/data";
 import Loader from "../../components/Loader";
-import {
-	deleteObject,
-	getDownloadURL,
-	ref,
-	uploadBytesResumable,
-} from "firebase/storage";
+
 import { storage } from "../../firebase.config";
 import { getAllFoodItems, saveItem } from "../../utils/firebaseFunctions";
 import { actionType } from "../../context/reducer";
@@ -24,7 +26,7 @@ import RestPage from "../../components/RestPage.container";
 
 const AddFood = () => {
 	const [title, setTitle] = useState("");
-	const [calories, setCalories] = useState("");
+	const [isVeg, setisVeg] = useState(false);
 	const [price, setPrice] = useState("");
 	const [category, setCategory] = useState(null);
 	const [imageAsset, setImageAsset] = useState(null);
@@ -32,12 +34,12 @@ const AddFood = () => {
 	const [alertStatus, setAlertStatus] = useState("danger");
 	const [msg, setMsg] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
-	const [{ foodItems }, dispatch] = useStateValue();
+	const [{ foodItems, restUser }, dispatch] = useStateValue();
 
 	const uploadImage = (e) => {
 		setIsLoading(true);
 		const imageFile = e.target.files[0];
-		const storageRef = ref(storage, `Images/${Date.now()}-${imageFile.name}`);
+		const storageRef = ref(storage, `images/${Date.now()}-${imageFile.name}`);
 		const uploadTask = uploadBytesResumable(storageRef, imageFile);
 
 		uploadTask.on(
@@ -89,7 +91,7 @@ const AddFood = () => {
 	const saveDetails = () => {
 		setIsLoading(true);
 		try {
-			if (!title || !calories || !imageAsset || !price || !category) {
+			if (!title || !imageAsset || !price || !category) {
 				setFields(true);
 				setMsg("Required fields can't be empty");
 				setAlertStatus("danger");
@@ -102,10 +104,11 @@ const AddFood = () => {
 					id: `${Date.now()}`,
 					title: title,
 					imageURL: imageAsset,
+					isVeg,
 					category: category,
-					calories: calories,
 					qty: 1,
 					price: price,
+					uid: restUser.uid,
 				};
 				saveItem(data);
 				setIsLoading(false);
@@ -134,7 +137,7 @@ const AddFood = () => {
 	const clearData = () => {
 		setTitle("");
 		setImageAsset(null);
-		setCalories("");
+		setisVeg(false);
 		setPrice("");
 		setCategory("Select Category");
 	};
@@ -243,7 +246,7 @@ const AddFood = () => {
 
 					<div className="w-full flex flex-col md:flex-row items-center gap-3">
 						<div className="w-full py-2 border-b border-gray-300 flex items-center gap-2">
-							<MdFoodBank className="text-gray-700 text-2xl" />
+							{/* <MdFoodBank className="text-gray-700 text-2xl" />
 							<input
 								type="text"
 								required
@@ -251,11 +254,28 @@ const AddFood = () => {
 								onChange={(e) => setCalories(e.target.value)}
 								placeholder="Calories"
 								className="w-full h-full text-lg bg-transparent outline-none border-none placeholder:text-gray-400 text-textColor"
-							/>
+							/> */}
+							<div
+								style={{ gap: "1rem" }}
+								className="flex items-center rounded">
+								<input
+									onChange={(e) => setisVeg(e.target.checked)}
+									checked={isVeg}
+									id="bordered-checkbox-1"
+									type="checkbox"
+									name="veg"
+									className="w-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+								/>
+								<label
+									for="bordered-checkbox-1"
+									className="w-full h-full text-lg bg-transparent outline-none border-none placeholder:text-gray-400 text-textColor">
+									Veg Item
+								</label>
+							</div>
 						</div>
 
 						<div className="w-full py-2 border-b border-gray-300 flex items-center gap-2">
-							<MdAttachMoney className="text-gray-700 text-2xl" />
+							<FaPoundSign className="text-gray-700 text-xl" />
 							<input
 								type="text"
 								required
