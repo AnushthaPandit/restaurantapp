@@ -20,8 +20,6 @@ function PrivateRoute({ children, role = "" }) {
 			break;
 	}
 
-	console.log({ roleData, loginRoute });
-
 	return roleData ? <>{children}</> : <Navigate to={loginRoute} />;
 }
 
