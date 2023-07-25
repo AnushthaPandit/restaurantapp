@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+
 import RestaurantList from "./pages/RestaurantList";
 import Checkout from "./pages/Checkout";
 import RestDetails from "./pages/RestDetails";
@@ -16,6 +17,8 @@ import AdminOrdersList from "./pages/Admin/OrdersList";
 import AdminUserList from "./pages/Admin/UserList";
 import AdminUserOrderList from "./pages/Admin/UserOrderList";
 import OrderDeatils from "./pages/OrderDeatils";
+
+import PrivateRoute from "./components/PrivateRoute";
 import { useStateValue } from "./context/StateProvider";
 import { getAllFoodItems } from "./utils/firebaseFunctions";
 import { actionType } from "./context/reducer";
@@ -42,13 +45,55 @@ const App = () => {
 				<Routes>
 					<Route path="/" element={<RestaurantList />} />
 					<Route path="/restaurant/:slug" element={<RestDetails />} />
-					<Route path="/checkout/:id" element={<Checkout />} />
+					<Route
+						path="/checkout/:id"
+						element={
+							<PrivateRoute role="user">
+								<Checkout />
+							</PrivateRoute>
+						}
+					/>
 					<Route path="/restaurant-login" element={<RestLogin />} />
-					<Route path="/rest-admin" element={<Dashboard />} />
-					<Route path="/rest-food-list" element={<FoodList />} />
-					<Route path="/rest-add-food" element={<AddFood />} />
-					<Route path="/rest-order-list" element={<OrdersList />} />
-					<Route path="/rest-profile-details" element={<ProfileDetails />} />
+					<Route
+						path="/rest-admin"
+						element={
+							<PrivateRoute role="restUser">
+								<Dashboard />
+							</PrivateRoute>
+						}
+					/>
+					<Route
+						path="/rest-food-list"
+						element={
+							<PrivateRoute role="restUser">
+								<FoodList />
+							</PrivateRoute>
+						}
+					/>
+					<Route
+						path="/rest-add-food"
+						element={
+							<PrivateRoute role="restUser">
+								<AddFood />
+							</PrivateRoute>
+						}
+					/>
+					<Route
+						path="/rest-order-list"
+						element={
+							<PrivateRoute role="restUser">
+								<OrdersList />
+							</PrivateRoute>
+						}
+					/>
+					<Route
+						path="/rest-profile-details"
+						element={
+							<PrivateRoute role="restUser">
+								<ProfileDetails />
+							</PrivateRoute>
+						}
+					/>
 					<Route path="/admin" element={<AdminDash />} />
 					<Route path="/admin-rest-list" element={<AdminRestList />} />
 					<Route path="/admin-orders-list" element={<AdminOrdersList />} />
