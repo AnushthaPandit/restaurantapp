@@ -1,8 +1,78 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 import CustomerPage from "../components/CustomerPage.container";
 
+import { app } from "../firebase.config";
+import { useStateValue } from "../context/StateProvider";
+import { actionType } from "../context/reducer";
+import * as firebaseFunc from "../utils/firebaseFunctions";
+import * as localStorageUtils from "../utils/fetchLocalStorageData";
+
 const RestLogin = () => {
+	const [{ user, restUser }, dispatch] = useStateValue();
+	const [isLoading, setisLoading] = useState(false);
+	const navigate = useNavigate();
+
+	const login = async () => {
+		setisLoading(true);
+
+		const firebaseAuth = getAuth(app);
+		const provider = new GoogleAuthProvider();
+
+		const {
+			user: { providerData },
+		} = await signInWithPopup(firebaseAuth, provider);
+
+		const userData = providerData[0];
+
+		await firebaseFunc.registerRestUser(userData);
+		localStorageUtils.setRestUser(userData);
+
+		dispatch({
+			type: actionType.SET_REST_USER,
+			restUser: userData,
+		});
+
+		setisLoading(false);
+	};
+
+	useEffect(() => {
+		if (restUser) {
+			navigate("/rest-admin");
+			return;
+		}
+
+		if (!user) {
+			return;
+		}
+
+		if (user) {
+			(async () => {
+				try {
+					setisLoading(true);
+					const restData = await firebaseFunc.fetchRestUserByUID(user.uid);
+
+					if (restData) {
+						localStorageUtils.setRestUser(restData);
+						dispatch({
+							type: actionType.SET_REST_USER,
+							restUser: restData,
+						});
+						setisLoading(false);
+						return;
+					}
+
+					setisLoading(false);
+				} catch (error) {
+					alert("Something went wrong!");
+					setisLoading(false);
+				}
+			})();
+		}
+	}, [restUser, navigate, user, dispatch]);
+
 	return (
 		<CustomerPage>
 			<div
@@ -26,7 +96,10 @@ const RestLogin = () => {
 									<center>
 										<h6 className="text-md font-bold">Lets Get Started</h6>
 									</center>
-									<button className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-orange-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline">
+									<button
+										onClick={login}
+										className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-orange-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline"
+										disabled={isLoading}>
 										<div className="bg-white p-2 rounded-full">
 											<svg className="w-4" viewBox="0 0 533.5 544.3">
 												<path
@@ -47,7 +120,9 @@ const RestLogin = () => {
 												/>
 											</svg>
 										</div>
-										<span className="ml-4">Connect with Google</span>
+										<span className="ml-4">
+											{isLoading ? "Loading.." : "Connect with Google"}
+										</span>
 									</button>
 
 									{/* <button className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5">

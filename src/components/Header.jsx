@@ -11,6 +11,7 @@ import Avatar from "../img/avatar.png";
 import { Link } from "react-router-dom";
 import { useStateValue } from "../context/StateProvider";
 import { actionType } from "../context/reducer";
+import { registerUser } from "../utils/firebaseFunctions";
 
 const Header = () => {
 	const firebaseAuth = getAuth(app);
@@ -25,6 +26,7 @@ const Header = () => {
 			const {
 				user: { refreshToken, providerData },
 			} = await signInWithPopup(firebaseAuth, provider);
+			await registerUser(providerData[0]);
 			dispatch({
 				type: actionType.SET_USER,
 				user: providerData[0],
