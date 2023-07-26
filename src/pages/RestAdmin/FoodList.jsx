@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 
 import RestPageContainer from "../../components/RestPage.container";
-import { fetchAllFoodItemsData } from "../../schemas/food_items.schema";
+import {
+	fetchAllFoodItemsData,
+	deleteFoodItem,
+	deleteImage,
+} from "../../schemas/food_items.schema";
 import { useStateValue } from "../../context/StateProvider";
 
 const FoodList = () => {
@@ -11,18 +15,40 @@ const FoodList = () => {
 
 	const [{ restUser }] = useStateValue();
 
-	useEffect(() => {
-		(async () => {
+	const deleteItem = async (doc_id, image_url) => {
+		if (
+			window.confirm(
+				"Are you sure you want to delete this food item? you cannot revert back?"
+			)
+		) {
 			try {
 				setisLoading(true);
-				const data = await fetchAllFoodItemsData(restUser.uid);
-				setitems(data);
+				await deleteImage(image_url);
+				await deleteFoodItem(doc_id);
+				await fetchfoodList();
+				alert("Deleted Successfully!!");
 			} catch (error) {
+				alert("Something Went wrong while deleting the item!!");
 			} finally {
 				setisLoading(false);
 			}
-		})();
-	}, []);
+		}
+	};
+
+	const fetchfoodList = useCallback(async () => {
+		try {
+			setisLoading(true);
+			const data = await fetchAllFoodItemsData(restUser.uid);
+			setitems(data);
+		} catch (error) {
+		} finally {
+			setisLoading(false);
+		}
+	}, [restUser.uid]);
+
+	useEffect(() => {
+		fetchfoodList();
+	}, [fetchfoodList]);
 
 	return (
 		<RestPageContainer name="Food List">
@@ -34,6 +60,9 @@ const FoodList = () => {
 						<table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
 							<thead className="text-xs text-gray-700 uppercase bg-orange-200">
 								<tr>
+									<th scope="col" className="px-6 py-3">
+										Image
+									</th>
 									<th scope="col" className="px-6 py-3">
 										Name
 									</th>
@@ -57,6 +86,16 @@ const FoodList = () => {
 										<th
 											scope="row"
 											className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+											<img
+												width={"50"}
+												height={"50"}
+												src={v.imageURL}
+												alt="food item"
+											/>
+										</th>
+										<th
+											scope="row"
+											className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
 											{v.title}
 										</th>
 										<td className="px-6 py-4">{v.isVeg ? "Veg" : "Nonveg"}</td>
@@ -65,9 +104,14 @@ const FoodList = () => {
 										<td className="px-6 py-4">
 											<Link
 												to={`/rest-food-item/${v.doc_id}/edit`}
-												className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+												className="font-medium text-blue-600 dark:text-blue-500 hover:underline px-5">
 												Edit
 											</Link>
+											<button
+												onClick={() => deleteItem(v.doc_id, v.imageURL)}
+												className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+												Delete
+											</button>
 										</td>
 									</tr>
 								))}

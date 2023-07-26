@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
 	deleteObject,
 	getDownloadURL,
@@ -7,24 +7,18 @@ import {
 	uploadBytesResumable,
 } from "firebase/storage";
 import { motion } from "framer-motion";
-import {
-	MdFastfood,
-	MdCloudUpload,
-	MdDelete,
-	MdFoodBank,
-	MdAttachMoney,
-} from "react-icons/md";
+import { MdFastfood, MdCloudUpload, MdDelete } from "react-icons/md";
 import { FaPoundSign } from "react-icons/fa";
 
-import { categories } from "../../utils/data";
 import Loader from "../../components/Loader";
-
-import { storage } from "../../firebase.config";
-import { getAllFoodItems, saveItem } from "../../utils/firebaseFunctions";
-import { fetchFoodItemsDetails } from "../../schemas/food_items.schema";
-import { actionType } from "../../context/reducer";
-import { useStateValue } from "../../context/StateProvider";
 import RestPage from "../../components/RestPage.container";
+
+import { categories } from "../../utils/data";
+import { storage } from "../../firebase.config";
+import {
+	fetchFoodItemsDetails,
+	updateFoodItem,
+} from "../../schemas/food_items.schema";
 
 const EditFoodItem = () => {
 	const [title, setTitle] = useState("");
@@ -36,7 +30,8 @@ const EditFoodItem = () => {
 	const [alertStatus, setAlertStatus] = useState("danger");
 	const [msg, setMsg] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
-	const [{ restUser }] = useStateValue();
+
+	const navigate = useNavigate();
 	const { id: food_item_id } = useParams();
 
 	const uploadImage = (e) => {
@@ -91,7 +86,7 @@ const EditFoodItem = () => {
 		});
 	};
 
-	const saveDetails = () => {
+	const saveDetails = async () => {
 		setIsLoading(true);
 		try {
 			if (!title || !imageAsset || !price || !category) {
@@ -104,24 +99,20 @@ const EditFoodItem = () => {
 				}, 4000);
 			} else {
 				const data = {
-					id: `${Date.now()}`,
 					title: title,
 					imageURL: imageAsset,
 					isVeg,
 					category: category,
-					qty: 1,
 					price: price,
-					uid: restUser.uid,
 				};
-				saveItem(data);
+				await updateFoodItem(data, food_item_id);
 				setIsLoading(false);
 				setFields(true);
-				setMsg("Data Uploaded successfully 😊");
+				setMsg("Data Saved successfully 😊");
 				setAlertStatus("success");
 				setTimeout(() => {
 					setFields(false);
 				}, 4000);
-				clearData();
 			}
 		} catch (error) {
 			console.log(error);
@@ -133,28 +124,47 @@ const EditFoodItem = () => {
 				setIsLoading(false);
 			}, 4000);
 		}
-
-		fetchData();
-	};
-
-	const clearData = () => {
-		setTitle("");
-		setImageAsset(null);
-		setisVeg(false);
-		setPrice("");
-		setCategory("Select Category");
 	};
 
 	useEffect(() => {
 		(async () => {
 			try {
+				setIsLoading(true);
 				const d = await fetchFoodItemsDetails(food_item_id);
-				console.log(d);
-			} catch (error) {}
+
+				if (!d) {
+					setFields(true);
+					setMsg("Invalid Food Item; This Food Item Doesn't exists!");
+					setAlertStatus("danger");
+
+					setTimeout(() => {
+						setFields(false);
+						setIsLoading(false);
+						navigate("/rest-food-list");
+					}, 4000);
+
+					return;
+				}
+
+				setTitle(d.title);
+				setisVeg(d.isVeg);
+				setPrice(d.price);
+				setCategory(d.category);
+				setImageAsset(d.imageURL);
+			} catch (error) {
+				setFields(true);
+				setMsg("Error while fetching data : Try AGain 🙇");
+				setAlertStatus("danger");
+
+				setTimeout(() => {
+					setFields(false);
+					setIsLoading(false);
+				}, 4000);
+			} finally {
+				setIsLoading(false);
+			}
 		})();
 	}, []);
-
-	const fetchData = async () => {};
 
 	return (
 		<RestPage name="Edit Food Item">
@@ -188,6 +198,7 @@ const EditFoodItem = () => {
 
 					<div className="w-full">
 						<select
+							value={category}
 							onChange={(e) => setCategory(e.target.value)}
 							className="outline-none w-full text-base border-b-2 border-gray-200 p-2 rounded-md cursor-pointer">
 							<option value="other" className="bg-white">
