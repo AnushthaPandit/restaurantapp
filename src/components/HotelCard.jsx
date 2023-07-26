@@ -1,9 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const HotelCard = ({ title, desc, category, headerImgUrl, slug, id }) => {
-	const is_veg = category === "veg";
-
+const HotelCard = ({
+	title,
+	desc,
+	category,
+	headerImgUrl,
+	isVeg,
+	isNonVeg,
+	id,
+}) => {
 	return (
 		<div className="w-full sm:w-1/2 md:w-1/2 xl:w-1/4 p-4">
 			<Link
@@ -17,14 +23,19 @@ const HotelCard = ({ title, desc, category, headerImgUrl, slug, id }) => {
 					/>
 				</div>
 				<div className="p-4">
-					<span
-						className={`inline-block px-2 py-1 leading-none ${
-							is_veg ? "bg-green-200" : "bg-orange-200"
-						} ${
-							is_veg ? "text-green-800" : "text-orange-800"
-						}  rounded-full font-semibold uppercase tracking-wide text-xs`}>
-						{category}
-					</span>
+					{isVeg ? (
+						<span
+							className={`inline-block px-2 py-1 leading-none bg-green-200  text-green-800  rounded-full font-semibold uppercase tracking-wide text-xs`}>
+							Veg
+						</span>
+					) : null}
+					{isNonVeg ? (
+						<span
+							className={`inline-block px-2 py-1 leading-none bg-orange-200 text-orange-800 rounded-full font-semibold uppercase tracking-wide text-xs`}>
+							Non Veg
+						</span>
+					) : null}
+
 					<h2 className="mt-2 mb-2  font-bold">{title}</h2>
 					<p className="text-sm">{desc}</p>
 					{/* <div className="mt-3 flex items-center">

@@ -1,20 +1,38 @@
-import React, { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import React, { useEffect, useState } from "react";
 
-import { useStateValue } from "../context/StateProvider";
 import CartContainer from "../components/CartContainer";
 import HotelList from "../components/HotelList";
 import CustomerPage from "../components/CustomerPage.container";
 
+import { useStateValue } from "../context/StateProvider";
+import { fetchAllRestData } from "../schemas/restuser.schema";
+import Loader from "../components/Loader";
+
 const MainContainer = () => {
-	const [{ foodItems, cartShow }] = useStateValue();
-	const [scrollValue, setScrollValue] = useState(0);
+	const [{ cartShow }] = useStateValue();
+	const [isLoading, setisLoading] = useState(false);
+	const [restlist, setrestlist] = useState([]);
+
+	useEffect(() => {
+		(async () => {
+			try {
+				setisLoading(true);
+				const data = await fetchAllRestData();
+				setrestlist(data);
+			} catch (error) {
+				console.log(error);
+				alert("Something went wrong!");
+			} finally {
+				setisLoading(false);
+			}
+		})();
+	}, []);
 
 	return (
 		<CustomerPage>
 			<div className="w-full h-auto flex flex-col items-center justify-center min-h-full">
 				<section className="w-full my-6">
+					{isLoading ? <Loader /> : null}
 					<div className="w-full flex items-center justify-between">
 						<p className="text-2xl font-semibold capitalize text-headingColor relative before:absolute before:rounded-lg before:content before:w-32 before:h-1 before:-bottom-2 before:left-0 before:bg-gradient-to-tr from-orange-400 to-orange-600 transition-all ease-in-out duration-100">
 							Top restaurant
@@ -35,7 +53,7 @@ const MainContainer = () => {
 						</motion.div>
 					</div> */}
 					</div>
-					<HotelList />
+					<HotelList list={restlist} />
 				</section>
 
 				{cartShow && <CartContainer />}

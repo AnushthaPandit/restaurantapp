@@ -20,6 +20,19 @@ export const saveProfileData = async (data, uid) => {
 	});
 };
 
+export const fetchAllRestData = async () => {
+	const querySnapshot = await getDocs(
+		collection(firestore, restusers_schema.name)
+	);
+
+	const da = [];
+	querySnapshot.forEach((doc) => {
+		da.push({ ...doc.data(), doc_id: doc.id });
+	});
+
+	return da;
+};
+
 export const fetchProfileData = async (uid) => {
 	const docRef = doc(firestore, restusers_schema.name, uid);
 	const docSnap = await getDoc(docRef);
