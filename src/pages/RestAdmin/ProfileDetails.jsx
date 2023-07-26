@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { MdCloudUpload, MdDelete } from "react-icons/md";
+import {
+	deleteObject,
+	getDownloadURL,
+	ref,
+	uploadBytesResumable,
+} from "firebase/storage";
 
 import RestPage from "../../components/RestPage.container";
+import Loader from "../../components/Loader";
 import {
 	saveProfileData,
 	fetchProfileData,
 } from "../../schemas/restuser.schema";
 import { useStateValue } from "../../context/StateProvider";
+import { storage } from "../../firebase.config";
 
 const ProfileDetails = () => {
 	const [formState, setformState] = useState({
@@ -19,6 +28,8 @@ const ProfileDetails = () => {
 		contact: 0,
 	});
 	const [isLoading, setisLoading] = useState(false);
+	const [imageAsset, setImageAsset] = useState(null);
+	const [imageLoading, setimageLoading] = useState(false);
 
 	const [{ restUser }] = useStateValue();
 
@@ -40,7 +51,10 @@ const ProfileDetails = () => {
 
 			setisLoading(true);
 
-			await saveProfileData(formState, restUser.uid);
+			await saveProfileData(
+				{ ...formState, header_image_url: imageAsset },
+				restUser.uid
+			);
 
 			alert("Data Saved Successfully!!");
 		} catch (error) {
@@ -50,6 +64,55 @@ const ProfileDetails = () => {
 		}
 	};
 
+	const uploadImage = (e) => {
+		setimageLoading(true);
+		const imageFile = e.target.files[0];
+		const storageRef = ref(
+			storage,
+			`header-images/${Date.now()}-${imageFile.name}`
+		);
+		const uploadTask = uploadBytesResumable(storageRef, imageFile);
+
+		uploadTask.on(
+			"state_changed",
+			(snapshot) => {
+				const uploadProgress =
+					(snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+			},
+			(error) => {
+				console.log(error);
+			},
+			() => {
+				getDownloadURL(uploadTask.snapshot.ref)
+					.then((downloadURL) => {
+						setImageAsset(downloadURL);
+						setimageLoading(false);
+					})
+					.catch((e) => {
+						console.log(e);
+						console.log("Something went wrong while uploading the image!");
+						setimageLoading(false);
+					});
+			}
+		);
+	};
+
+	const deleteImage = () => {
+		setimageLoading(true);
+		const deleteRef = ref(storage, imageAsset);
+		deleteObject(deleteRef)
+			.then(async () => {
+				setImageAsset(null);
+				await saveProfileData({ header_image_url: null }, restUser.uid);
+				setimageLoading(false);
+			})
+			.catch((e) => {
+				console.log(e);
+				setimageLoading(false);
+				alert("Something went wrong while deleting!");
+			});
+	};
+
 	useEffect(() => {
 		(async () => {
 			try {
@@ -57,6 +120,7 @@ const ProfileDetails = () => {
 				const data = await fetchProfileData(restUser.uid);
 				if (data) {
 					setformState(data);
+					setImageAsset(data.header_image_url);
 				}
 			} catch (error) {
 				alert("Something went wrong while fetching the data!");
@@ -72,6 +136,49 @@ const ProfileDetails = () => {
 				<form
 					onSubmit={handleSubmit}
 					className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
+					<div className="group flex justify-center items-center flex-col border-2 border-dotted border-gray-300 w-full h-225 md:h-340 cursor-pointer rounded-lg">
+						{imageLoading ? (
+							<Loader />
+						) : (
+							<>
+								{!imageAsset ? (
+									<>
+										<label className="w-full h-full flex flex-col items-center justify-center cursor-pointer">
+											<div className="w-full h-full flex flex-col items-center justify-center gap-2">
+												<MdCloudUpload className="text-gray-500 text-3xl hover:text-gray-700" />
+												<p className="text-gray-500 hover:text-gray-700">
+													Click here to upload header image
+												</p>
+											</div>
+											<input
+												type="file"
+												name="uploadimage"
+												accept="image/*"
+												onChange={uploadImage}
+												className="w-0 h-0"
+											/>
+										</label>
+									</>
+								) : (
+									<>
+										<div className="relative h-full">
+											<img
+												src={imageAsset}
+												alt="uploaded image"
+												className="w-full h-full object-cover"
+											/>
+											<button
+												type="button"
+												className="absolute bottom-3 right-3 p-3 rounded-full bg-red-500 text-xl cursor-pointer outline-none hover:shadow-md  duration-500 transition-all ease-in-out"
+												onClick={deleteImage}>
+												<MdDelete className="text-white" />
+											</button>
+										</div>
+									</>
+								)}
+							</>
+						)}
+					</div>
 					<div className="-mx-3 md:flex mb-6">
 						<div className="md:w-1/2 px-3 mb-6 md:mb-0">
 							<label
