@@ -45,7 +45,7 @@ const App = () => {
 			<div className="w-screen h-auto flex flex-col bg-primary">
 				<Routes>
 					<Route path="/" element={<RestaurantList />} />
-					<Route path="/restaurant/:slug" element={<RestDetails />} />
+					<Route path="/restaurant/:id" element={<RestDetails />} />
 					<Route
 						path="/checkout/:id"
 						element={

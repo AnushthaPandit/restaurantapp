@@ -1,36 +1,61 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import HomeContainer from "../components/HomeContainer";
-import { motion } from "framer-motion";
-import { MdChevronLeft, MdChevronRight } from "react-icons/md";
-import RowContainer from "../components/RowContainer";
+
 import { useStateValue } from "../context/StateProvider";
 import MenuContainer from "../components/MenuContainer";
 import CartContainer from "../components/CartContainer";
 import CustomerPage from "../components/CustomerPage.container";
+import Loader from "../components/Loader";
 
-import hotel_list from "../data/hotel_list";
+import { fetchAllFoodItemsData } from "../schemas/food_items.schema";
+import { fetchProfileData } from "../schemas/restuser.schema";
 
 const RestDetails = () => {
-	const [{ foodItems, cartShow }] = useStateValue();
-	const [scrollValue, setScrollValue] = useState(0);
+	const [{ cartShow }] = useStateValue();
+	const { id } = useParams(); //rest doc id
+	const [isLoading, setisLoading] = useState(false);
+	const [foodItems, setfoodItems] = useState([]);
+	const [restDetails, setrestDetails] = useState();
 
-	const location_obj = useLocation();
-	const id = location_obj.pathname.split("/")[2];
+	useEffect(() => {
+		(async () => {
+			try {
+				setisLoading(true);
 
-	const hotel_data = hotel_list.find((v) => v.id === id);
+				const data = await fetchAllFoodItemsData(id);
+				const profData = await fetchProfileData(id);
 
-	if (!hotel_data) {
-		return <center>No data</center>;
+				setrestDetails(profData);
+				setfoodItems(data);
+			} catch (error) {
+			} finally {
+				setisLoading(false);
+			}
+		})();
+	}, [id]);
+
+	if (isLoading) {
+		return (
+			<center>
+				<Loader />
+			</center>
+		);
+	}
+
+	if (!restDetails) {
+		return <center> NO Page Found!</center>;
 	}
 
 	return (
 		<CustomerPage>
 			<div className="w-full h-auto flex flex-col items-center justify-center ">
 				<HomeContainer
-					title={hotel_data.title}
-					desc={hotel_data.desc}
-					items={hotel_data.top_items}
+					title={restDetails.title}
+					desc={restDetails.desc}
+					isNonVeg={restDetails.nonveg}
+					isVeg={restDetails.veg}
+					items={foodItems.slice(0, 5)}
 				/>
 
 				{/* <section className="w-full my-6">
@@ -61,7 +86,7 @@ const RestDetails = () => {
 				/>
 			</section> */}
 
-				<MenuContainer />
+				<MenuContainer foodItems={foodItems} />
 
 				{cartShow && <CartContainer />}
 			</div>

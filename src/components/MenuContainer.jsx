@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { IoFastFood } from "react-icons/io5";
-import { categories } from "../utils/data";
 import { motion } from "framer-motion";
+
 import RowContainer from "./RowContainer";
-import { useStateValue } from "../context/StateProvider";
 
-import { heroData } from "../utils/data";
+import { categories } from "../utils/data";
 
-const MenuContainer = () => {
-	const [filter, setFilter] = useState("chicken");
-
-	const [{ foodItems }] = useStateValue();
+const MenuContainer = ({ foodItems }) => {
+	const [filter, setFilter] = useState("fish");
 
 	return (
 		<section className="w-full my-6" id="menu">
@@ -58,7 +55,7 @@ const MenuContainer = () => {
 				<div className="w-full">
 					<RowContainer
 						flag={false}
-						data={heroData?.filter((n) => n.category === filter)}
+						data={foodItems?.filter((n) => n.category === filter)}
 					/>
 				</div>
 			</div>
