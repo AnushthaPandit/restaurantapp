@@ -17,6 +17,35 @@ const RestDetails = () => {
 	const [isLoading, setisLoading] = useState(false);
 	const [foodItems, setfoodItems] = useState([]);
 	const [restDetails, setrestDetails] = useState();
+	const [cartItems, setcartItems] = useState([])
+
+	const addToCart = (item) =>{
+		const itemIndex = cartItems.findIndex(v =>  v.doc_id === item.doc_id);
+		if (itemIndex > -1) {
+			setcartItems(prev =>{
+				prev[itemIndex].qty = prev[itemIndex].qty + 1
+				return [...prev]
+			})
+		}else{
+			setcartItems(prev => [...prev, item])
+		}
+	}
+
+	const removeFromCart = (item) =>{
+		setcartItems(prev => {
+			const itemIndex = prev.findIndex(v =>  v.doc_id === item.doc_id);
+			if (prev[itemIndex].qty === 1) {
+				return prev.filter(v => v.doc_id !== item.doc_id)
+			}
+
+			prev[itemIndex].qty = prev[itemIndex].qty -1;
+			return [...prev]
+		})
+	}
+
+	const emptyCart = () =>{
+		setcartItems([])
+	}
 
 	useEffect(() => {
 		(async () => {
@@ -48,7 +77,7 @@ const RestDetails = () => {
 	}
 
 	return (
-		<CustomerPage>
+		<CustomerPage cartItemsCount={cartItems.length} doShowCartBtn>
 			<div className="w-full h-auto flex flex-col items-center justify-center ">
 				<HomeContainer
 					title={restDetails.title}
@@ -56,6 +85,7 @@ const RestDetails = () => {
 					isNonVeg={restDetails.nonveg}
 					isVeg={restDetails.veg}
 					items={foodItems.slice(0, 5)}
+					number={restDetails.contact}
 				/>
 
 				{/* <section className="w-full my-6">
@@ -86,9 +116,9 @@ const RestDetails = () => {
 				/>
 			</section> */}
 
-				<MenuContainer foodItems={foodItems} />
+				<MenuContainer addToCart={addToCart} foodItems={foodItems} />
 
-				{cartShow && <CartContainer />}
+				{cartShow && <CartContainer addToCart={addToCart} removeFromCart={removeFromCart} cartItems={cartItems} emptyCart={emptyCart} />}
 			</div>
 		</CustomerPage>
 	);

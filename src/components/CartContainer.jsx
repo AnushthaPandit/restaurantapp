@@ -9,11 +9,19 @@ import { actionType } from "../context/reducer";
 import EmptyCart from "../img/emptyCart.svg";
 import CartItem from "./CartItem";
 
-const CartContainer = ({ isCheckout }) => {
+const CartContainer = ({ cartItems, addToCart, removeFromCart , emptyCart }) => {
 	const navigate = useNavigate();
-	const [{ cartShow, cartItems, user }, dispatch] = useStateValue();
+	const [{ cartShow, user }, dispatch] = useStateValue();
 	const [flag, setFlag] = useState(1);
 	const [tot, setTot] = useState(0);
+
+	const updateQty = (action="remove", item) =>{
+		if (action==="remove") {
+			removeFromCart(item)
+		}else{
+			addToCart(item)
+		}
+	}
 
 	const showCart = () => {
 		dispatch({
@@ -30,12 +38,7 @@ const CartContainer = ({ isCheckout }) => {
 	}, [tot, flag]);
 
 	const clearCart = () => {
-		dispatch({
-			type: actionType.SET_CARTITEMS,
-			cartItems: [],
-		});
-
-		localStorage.setItem("cartItems", JSON.stringify([]));
+		emptyCart()
 	};
 
 	const checkout = () => {
@@ -76,6 +79,7 @@ const CartContainer = ({ isCheckout }) => {
 									item={item}
 									setFlag={setFlag}
 									flag={flag}
+									updateQty={updateQty}
 								/>
 							))}
 					</div>

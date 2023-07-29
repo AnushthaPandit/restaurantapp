@@ -13,7 +13,7 @@ import { useStateValue } from "../context/StateProvider";
 import { actionType } from "../context/reducer";
 import { registerUser } from "../utils/firebaseFunctions";
 
-const Header = () => {
+const Header = ({ doShowCart, cartItemsCount }) => {
 	const firebaseAuth = getAuth(app);
 	const provider = new GoogleAuthProvider();
 
@@ -83,18 +83,20 @@ const Header = () => {
 						</li> */}
 					</motion.ul>
 
-					<div
-						className="relative flex items-center justify-center"
-						onClick={showCart}>
-						<MdShoppingBasket className="text-textColor text-2xl  cursor-pointer" />
-						{cartItems && cartItems.length > 0 && (
-							<div className=" absolute -top-2 -right-2 w-5 h-5 rounded-full bg-cartNumBg flex items-center justify-center">
-								<p className="text-xs text-white font-semibold">
-									{cartItems.length}
-								</p>
-							</div>
-						)}
-					</div>
+					{doShowCart && (
+						<div
+							className="relative flex items-center justify-center"
+							onClick={showCart}>
+							<MdShoppingBasket className="text-textColor text-2xl  cursor-pointer" />
+							{cartItemsCount > 0 && (
+								<div className=" absolute -top-2 -right-2 w-5 h-5 rounded-full bg-cartNumBg flex items-center justify-center">
+									<p className="text-xs text-white font-semibold">
+										{cartItemsCount}
+									</p>
+								</div>
+							)}
+						</div>
+					)}
 
 					<div className="relative">
 						<motion.img
@@ -110,18 +112,6 @@ const Header = () => {
 								animate={{ opacity: 1, scale: 1 }}
 								exit={{ opacity: 0, scale: 0.6 }}
 								className="w-40 bg-gray-50 shadow-xl rounded-lg flex flex-col absolute top-12 right-0">
-								{user && user.email === "kumarsen.bash@gmail.com" && (
-									<>
-										<Link to={"/createItem"}>
-											<p
-												className="px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-all duration-100 ease-in-out text-textColor text-base"
-												onClick={() => setIsMenu(false)}>
-												New Item <MdAdd />
-											</p>
-										</Link>
-									</>
-								)}
-
 								<Link to={"/restaurant-login"}>
 									<p className="px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-all duration-100 ease-in-out text-textColor text-base">
 										Restaurant Login <BiRestaurant />
@@ -140,18 +130,20 @@ const Header = () => {
 
 			{/* mobile */}
 			<div className="flex items-center justify-between md:hidden w-full h-full ">
-				<div
-					className="relative flex items-center justify-center"
-					onClick={showCart}>
-					<MdShoppingBasket className="text-textColor text-2xl  cursor-pointer" />
-					{cartItems && cartItems.length > 0 && (
-						<div className=" absolute -top-2 -right-2 w-5 h-5 rounded-full bg-cartNumBg flex items-center justify-center">
-							<p className="text-xs text-white font-semibold">
-								{cartItems.length}
-							</p>
-						</div>
-					)}
-				</div>
+				{doShowCart && (
+					<div
+						className="relative flex items-center justify-center"
+						onClick={showCart}>
+						<MdShoppingBasket className="text-textColor text-2xl  cursor-pointer" />
+						{cartItemsCount > 0 && (
+							<div className=" absolute -top-2 -right-2 w-5 h-5 rounded-full bg-cartNumBg flex items-center justify-center">
+								<p className="text-xs text-white font-semibold">
+									{cartItems.length}
+								</p>
+							</div>
+						)}
+					</div>
+				)}
 
 				<Link to={"/"} className="flex items-center gap-2">
 					<img src={Logo} className="w-8 object-cover" alt="logo" />
@@ -172,14 +164,6 @@ const Header = () => {
 							animate={{ opacity: 1, scale: 1 }}
 							exit={{ opacity: 0, scale: 0.6 }}
 							className="w-40 bg-gray-50 shadow-xl rounded-lg flex flex-col absolute top-12 right-0">
-							{user && user.email === "kumarsen.bash@gmail.com" && (
-								<Link to={"/createItem"}>
-									<p className="px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-all duration-100 ease-in-out text-textColor text-base">
-										New Item <MdAdd />
-									</p>
-								</Link>
-							)}
-
 							<ul className="flex flex-col ">
 								<li
 									className="text-base text-textColor hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer hover:bg-slate-100 px-4 py-2"

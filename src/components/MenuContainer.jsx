@@ -6,7 +6,7 @@ import RowContainer from "./RowContainer";
 
 import { categories } from "../utils/data";
 
-const MenuContainer = ({ foodItems }) => {
+const MenuContainer = ({ foodItems, addToCart }) => {
 	const [filter, setFilter] = useState("fish");
 
 	return (
@@ -54,6 +54,7 @@ const MenuContainer = ({ foodItems }) => {
 
 				<div className="w-full">
 					<RowContainer
+						addToCart={addToCart}
 						flag={false}
 						data={foodItems?.filter((n) => n.category === filter)}
 					/>
