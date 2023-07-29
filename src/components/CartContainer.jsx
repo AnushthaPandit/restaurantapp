@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import { RiRefreshFill } from "react-icons/ri";
-
 import { motion } from "framer-motion";
+
 import { useStateValue } from "../context/StateProvider";
 import { actionType } from "../context/reducer";
 import EmptyCart from "../img/emptyCart.svg";
+import {insert_checkout_data} from "../schemas/checkout.schema"
+
 import CartItem from "./CartItem";
 
 const CartContainer = ({ cartItems, addToCart, removeFromCart , emptyCart }) => {
@@ -14,6 +16,9 @@ const CartContainer = ({ cartItems, addToCart, removeFromCart , emptyCart }) => 
 	const [{ cartShow, user }, dispatch] = useStateValue();
 	const [flag, setFlag] = useState(1);
 	const [tot, setTot] = useState(0);
+	const [isLoading, setisLoading] = useState(false);
+
+	const {id: rest_doc_id} = useParams()
 
 	const updateQty = (action="remove", item) =>{
 		if (action==="remove") {
@@ -32,7 +37,7 @@ const CartContainer = ({ cartItems, addToCart, removeFromCart , emptyCart }) => 
 
 	useEffect(() => {
 		let totalPrice = cartItems.reduce(function (accumulator, item) {
-			return accumulator + parseInt(item.qty) * parseFloat(item.price);
+			return accumulator + parseFloat(item.qty) * parseFloat(item.price);
 		}, 0);
 		setTot(totalPrice);
 	}, [tot, flag]);
@@ -41,8 +46,14 @@ const CartContainer = ({ cartItems, addToCart, removeFromCart , emptyCart }) => 
 		emptyCart()
 	};
 
-	const checkout = () => {
-		navigate("/checkout/8989");
+	const checkout = async() => {
+		setisLoading(true);
+		const doc_id = await insert_checkout_data({
+			rest_doc_id,
+			uid: user.uid,
+			cartItems,
+		})
+		navigate("/checkout/"+doc_id);
 	};
 
 	return (
@@ -109,8 +120,9 @@ const CartContainer = ({ cartItems, addToCart, removeFromCart , emptyCart }) => 
 								whileTap={{ scale: 0.8 }}
 								onClick={checkout}
 								type="button"
+								disabled={isLoading}
 								className="w-full p-2 rounded-full bg-gradient-to-tr from-orange-400 to-orange-600 text-gray-50 text-lg my-2 hover:shadow-lg">
-								Check Out
+								{ isLoading ? "Loading.." : "Checkout" }
 							</motion.button>
 						) : (
 							<motion.button
