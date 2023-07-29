@@ -1,14 +1,47 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
+import { useParams } from "react-router-dom";
+
+import { fetch_single_order } from "../schemas/orders.schema";
+import Loader from "../components/Loader";
 
 const OrderDeatils = () => {
+
+	const { id: order_doc_id } = useParams()
+	const [isLoading, setisLoading] = useState(false);
+	const [details, setdetails] = useState({})
+
+	useEffect(() => {
+		(async () => {
+			try {
+				setisLoading(true);
+
+				const data = await fetch_single_order(order_doc_id);
+				
+				setdetails(data);
+
+			} catch (error) {
+			} finally {
+				setisLoading(false);
+			}
+		})();
+	}, [order_doc_id]);
+
+	if (isLoading) {
+		return (
+			<center>
+				<Loader />
+			</center>
+		);
+	}
+
 	return (
 		<div class="py-14 px-4 md:px-6 2xl:px-20 2xl:container 2xl:mx-auto">
 			<div class="flex justify-start item-start space-y-2 flex-col">
 				<h1 class="text-3xl lg:text-4xl font-semibold leading-7 lg:leading-9">
-					Order #13432
+					Order #{details.doc_id}
 				</h1>
 				<p class="text-base font-medium leading-6">
-					21st Mart 2021 at 10:34 PM
+					{details.created_at?.toDate()?.utc}
 				</p>
 			</div>
 			<div class="mt-10 flex flex-col xl:flex-row jusitfy-center items-stretch w-full xl:space-x-8 space-y-4 md:space-y-6 xl:space-y-0">
@@ -111,7 +144,7 @@ const OrderDeatils = () => {
 										Subtotal
 									</p>
 									<p class="text-base dark:text-gray-300 leading-4 text-gray-600">
-										$3
+										&pound;{details.sub_total}
 									</p>
 								</div>
 								{/* <div class="flex justify-between items-center w-full">
@@ -130,7 +163,7 @@ const OrderDeatils = () => {
 										Shipping
 									</p>
 									<p class="text-base dark:text-gray-300 leading-4 text-gray-600">
-										$1
+									&pound;{10.0}
 									</p>
 								</div>
 							</div>
@@ -139,7 +172,7 @@ const OrderDeatils = () => {
 									Total
 								</p>
 								<p class="text-base dark:text-gray-300 font-semibold leading-4 text-gray-600">
-									$4
+								&pound;{details.total_price}
 								</p>
 							</div>
 						</div>

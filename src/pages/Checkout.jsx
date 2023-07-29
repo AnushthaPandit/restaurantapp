@@ -72,7 +72,7 @@ const Checkout = () => {
 
 		setorderLoading(true);
 
-		await insert_order_data({...details, ...formState})
+		await insert_order_data({...details, ...formState, status:"pending", sub_total: totalPrice, total_price: totalPrice + 10.0 })
 		await delete_checkout(checkout_doc_id);
 
 		setorderLoading(false);
