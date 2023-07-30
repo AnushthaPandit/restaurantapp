@@ -44,15 +44,15 @@ const Index = () => {
 		<AdminPageContainer name={"User Order List"}>
 			<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
 				{orders.length === 0 ? <center>No Data</center> : ""}
-				<table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-					<caption class="p-5 text-lg font-semibold text-left text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+				<table class="w-full text-sm text-left text-gray-500">
+					<caption class="p-5 text-lg font-semibold text-left text-gray-900 bg-white">
 						{user.displayName}'s Orders
-						<p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
+						<p class="mt-1 text-sm font-normal text-gray-500">
 							List of orders placed by john doe
 						</p>
 					</caption>
 
-					<thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+					<thead class="text-xs uppercase bg-gray-700 text-gray-400">
 						<tr>
 							<th scope="col" class="px-6 py-3">
 								Order Id
@@ -78,24 +78,24 @@ const Index = () => {
 						{orders.map((v, i) => (
 							<tr
 								key={i}
-								class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+								class="bg-white border-b bg-gray-800">
 								<th
 									scope="row"
-									class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+									class="px-6 py-4 font-medium text-white whitespace-nowrap">
 									#{v.doc_id}
 								</th>
 								<th
 									scope="row"
-									class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+									class="px-6 py-4 font-medium text-white whitespace-nowrap">
 									{v.rest_details.title}
 								</th>
-								<td class="px-6 py-4">{v.cartItems.length}</td>
-								<td class="px-6 py-4">&pound;{v.total_price}</td>
-								<td class="px-6 py-4">{v.address}</td>
+								<td class="px-6 py-4 text-white">{v.cartItems.length}</td>
+								<td class="px-6 py-4 text-white">&pound;{v.total_price}</td>
+								<td class="px-6 py-4 text-white">{v.address}</td>
 								<td class="px-6 py-4 text-right">
 									<Link
 										to={"/order-details/"+v.doc_id}
-										class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+										class="font-medium text-blue-500 hover:underline">
 										View
 									</Link>
 								</td>

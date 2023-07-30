@@ -9,13 +9,21 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 
 import {delRestUser} from "../utils/fetchLocalStorageData"
+import { useStateValue } from "../context/StateProvider";
+import { actionType } from '../context/reducer'
 
 const Sidebar = () => {
 
 	const navigate = useNavigate();
+	const [{}, dispatch] =useStateValue()
 
 	const logout = () =>{
 		delRestUser()
+		dispatch({
+			type: actionType.SET_REST_USER,
+			restUser: null,
+		});
+
 		navigate("/")
 	}
 

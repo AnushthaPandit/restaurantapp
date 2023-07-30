@@ -57,7 +57,7 @@ const FoodList = () => {
 				{isLoading ? <center>Loading...</center> : ""}
 				{items.length > 0 ? (
 					<div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-						<table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+						<table className="w-full text-sm text-left text-gray-500">
 							<thead className="text-xs text-gray-700 uppercase bg-orange-200">
 								<tr>
 									<th scope="col" className="px-6 py-3">
@@ -85,7 +85,7 @@ const FoodList = () => {
 									<tr key={i} className="bg-white border-b bg-gray-800">
 										<th
 											scope="row"
-											className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+											className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
 											<img
 												width={"50"}
 												height={"50"}
@@ -95,21 +95,21 @@ const FoodList = () => {
 										</th>
 										<th
 											scope="row"
-											className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+											className="px-6 py-4 font-medium text-white whitespace-nowrap">
 											{v.title}
 										</th>
-										<td className="px-6 py-4">{v.isVeg ? "Veg" : "Nonveg"}</td>
-										<td className="px-6 py-4">{v.category}</td>
-										<td className="px-6 py-4">&pound; {v.price}</td>
-										<td className="px-6 py-4">
+										<td className="px-6 py-4 text-white">{v.isVeg ? "Veg" : "Nonveg"}</td>
+										<td className="px-6 py-4 text-white">{v.category}</td>
+										<td className="px-6 py-4 text-white">&pound; {v.price}</td>
+										<td className="px-6 py-4 text-white">
 											<Link
 												to={`/rest-food-item/${v.doc_id}/edit`}
-												className="font-medium text-blue-600 dark:text-blue-500 hover:underline px-5">
+												className="font-medium text-blue-600 hover:underline px-5">
 												Edit
 											</Link>
 											<button
 												onClick={() => deleteItem(v.doc_id, v.imageURL)}
-												className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+												className="font-medium text-blue-600 hover:underline">
 												Delete
 											</button>
 										</td>

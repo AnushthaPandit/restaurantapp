@@ -40,7 +40,7 @@ const Index = () => {
 	return (
 		<AdminPageContainer name={"Restaurants"}>
 			<div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-				<table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+				<table className="w-full text-sm text-left text-white">
 					<thead className="text-xs text-gray-700 uppercase bg-white-300">
 						<tr>
 							<th scope="col" className="px-6 py-3">
@@ -66,17 +66,17 @@ const Index = () => {
 							rests.map((v,i) => <tr key={i} className="bg-white border-b bg-gray-800">
 							<th
 								scope="row"
-								className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+								className="px-6 py-4 font-medium text-white whitespace-nowrap">
 								{v.title}
 							</th>
-							<td className="px-6 py-4">{ v.veg ? "Veg" : "" }{ v.nonveg ? ", Nonveg" : "" }</td>
-							<td className="px-6 py-4">{v.city}, zip:{v.zip}</td>
-							<td className="px-6 py-4">{v.contact}</td>
+							<td className="px-6 py-4 text-white">{ v.veg ? "Veg" : "" }{ v.nonveg ? ", Nonveg" : "" }</td>
+							<td className="px-6 py-4 text-white">{v.city}, zip:{v.zip}</td>
+							<td className="px-6 py-4 text-white">{v.contact}</td>
 
-							<td className="px-6 py-4">
+							<td className="px-6 py-4 text-white">
 								<Link
 									to={"/restaurant/"+v.doc_id}
-									className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+									className="font-medium text-blue-600 text-white hover:underline">
 									View Details
 								</Link>
 							</td>
