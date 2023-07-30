@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 
 import CustomerPage from "../components/CustomerPage.container";
 import Loader from "../components/Loader";
 
-import { fetch_checkout_by_id, delete_checkout } from "../schemas/checkout.schema";
+import {
+	fetch_checkout_by_id,
+	delete_checkout,
+} from "../schemas/checkout.schema";
 import { insert_order_data } from "../schemas/orders.schema";
 import { useStateValue } from "../context/StateProvider";
 
 const Checkout = () => {
 	const [{ user }] = useStateValue();
 	const { id: checkout_doc_id } = useParams();
+	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
+
+	const is_repeated = searchParams.get("repeated") === "true";
 
 	const [isLoading, setisLoading] = useState(false);
 	const [formState, setformState] = useState({
@@ -25,6 +31,9 @@ const Checkout = () => {
 	const [orderLoading, setorderLoading] = useState(false);
 
 	let totalPrice = 0;
+	let substract_amount = is_repeated ? 1 : 0
+	let tax_amt = 10
+	let sub_total_price = 0
 
 	useEffect(() => {
 		(async () => {
@@ -32,7 +41,6 @@ const Checkout = () => {
 				setisLoading(true);
 
 				const data = await fetch_checkout_by_id(checkout_doc_id);
-				console.log(data);
 
 				setdetails(data);
 			} catch (error) {
@@ -46,7 +54,7 @@ const Checkout = () => {
 		setformState((prev) => ({ ...prev, name: user.displayName }));
 	}, [user.displayName]);
 
-	const handleSubmit = async(e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 
 		const name = formState.name.trim();
@@ -56,30 +64,37 @@ const Checkout = () => {
 		const postcode = formState.postcode.trim();
 
 		if (!name || !address || !city) {
-			alert("Please fill all the details!")
+			alert("Please fill all the details!");
 			return;
 		}
 
-		if(contact.length !== 10){
-			alert("Contact must be of 10 digits!")
+		if (contact.length !== 10) {
+			alert("Contact must be of 10 digits!");
 			return;
 		}
 
-		if(postcode.length < 4 || postcode < 8){
-			alert("Postcode can be greater than 3 digits and less than 8 digits!")
+		if (postcode.length < 4 || postcode < 8) {
+			alert("Postcode can be greater than 3 digits and less than 8 digits!");
 			return;
 		}
 
 		setorderLoading(true);
 
-		await insert_order_data({...details, ...formState, status:"pending", sub_total: totalPrice, total_price: totalPrice + 10.0 })
+		await insert_order_data({
+			...details,
+			...formState,
+			status: "pending",
+			sub_total: sub_total_price,
+			total_price: totalPrice,
+			is_repeated,
+			substract_amount,
+		});
 		await delete_checkout(checkout_doc_id);
 
 		setorderLoading(false);
 
-		alert("You're oreder has been placed!!")
-		navigate("/restaurant/"+details.rest_doc_id)
-
+		alert("You're oreder has been placed!!");
+		navigate("/restaurant/" + details.rest_doc_id);
 	};
 
 	const handleChange = (e) => {
@@ -102,9 +117,11 @@ const Checkout = () => {
 		return <center> NO Page Found!</center>;
 	}
 
-	totalPrice = details.cartItems.reduce(function (accumulator, item) {
+	sub_total_price = details.cartItems.reduce(function (accumulator, item) {
 		return accumulator + parseFloat(item.qty) * parseFloat(item.price);
 	}, 0);
+
+	totalPrice = (sub_total_price + tax_amt) - substract_amount;
 
 	return (
 		<CustomerPage>
@@ -116,9 +133,7 @@ const Checkout = () => {
 			<div className="container p-12 mx-auto">
 				<div className="flex flex-col w-full px-0 mx-auto md:flex-row">
 					<div className="flex flex-col md:w-full">
-						<h2 className="mb-4 font-bold md:text-xl text-heading ">
-							Address
-						</h2>
+						<h2 className="mb-4 font-bold md:text-xl text-heading ">Address</h2>
 						<form
 							className="justify-center w-full mx-auto"
 							onSubmit={handleSubmit}>
@@ -225,7 +240,7 @@ const Checkout = () => {
 										type="submit"
 										className="w-full p-2 rounded-full bg-gradient-to-tr from-orange-400 to-orange-600 text-gray-50 text-lg my-2 hover:shadow-lg"
 										disabled={orderLoading}>
-										{ orderLoading? "Loading..." : "Order Now!" }
+										{orderLoading ? "Loading..." : "Order Now!"}
 									</button>
 								</div>
 							</div>
@@ -277,13 +292,19 @@ const Checkout = () => {
 								<h2 className="text-xl font-bold">Total</h2>
 							</div>
 							<div className="flex items-center w-full py-4 text-sm font-semibold border-b border-gray-300 lg:py-5 lg:px-3 text-heading last:border-b-0 last:text-base last:pb-0">
-								Subtotal<span className="ml-2">&pound;{totalPrice}</span>
+								Subtotal<span className="ml-2">&pound;{sub_total_price}</span>
 							</div>
 							<div className="flex items-center w-full py-4 text-sm font-semibold border-b border-gray-300 lg:py-5 lg:px-3 text-heading last:border-b-0 last:text-base last:pb-0">
-								Delivery And Other Taxes<span className="ml-2">&pound;10</span>
+								Delivery And Other Taxes<span className="ml-2">&pound;{tax_amt}</span>
 							</div>
+							{is_repeated && (
+								<div className="flex items-center w-full py-4 text-sm font-semibold border-b border-gray-300 lg:py-5 lg:px-3 text-heading last:border-b-0 last:text-base last:pb-0">
+									Repeated Order Discount (&pound;{substract_amount})
+									<span className="ml-2 text-red-600">-&pound;1</span>
+								</div>
+							)}
 							<div className="flex items-center w-full py-4 text-sm font-semibold border-b border-gray-300 lg:py-5 lg:px-3 text-heading last:border-b-0 last:text-base last:pb-0">
-								Total<span className="ml-2">&pound;{totalPrice + 10.0}</span>
+								Total<span className="ml-2">&pound;{(totalPrice)}</span>
 							</div>
 						</div>
 					</div>

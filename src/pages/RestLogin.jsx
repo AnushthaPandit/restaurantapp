@@ -48,29 +48,29 @@ const RestLogin = () => {
 			return;
 		}
 
-		if (user) {
-			(async () => {
-				try {
-					setisLoading(true);
-					const restData = await firebaseFunc.fetchRestUserByUID(user.uid);
+		// if (user) {
+		// 	(async () => {
+		// 		try {
+		// 			setisLoading(true);
+		// 			const restData = await firebaseFunc.fetchRestUserByUID(user.uid);
 
-					if (restData) {
-						localStorageUtils.setRestUser(restData);
-						dispatch({
-							type: actionType.SET_REST_USER,
-							restUser: restData,
-						});
-						setisLoading(false);
-						return;
-					}
+		// 			if (restData) {
+		// 				localStorageUtils.setRestUser(restData);
+		// 				dispatch({
+		// 					type: actionType.SET_REST_USER,
+		// 					restUser: restData,
+		// 				});
+		// 				setisLoading(false);
+		// 				return;
+		// 			}
 
-					setisLoading(false);
-				} catch (error) {
-					alert("Something went wrong!");
-					setisLoading(false);
-				}
-			})();
-		}
+		// 			setisLoading(false);
+		// 		} catch (error) {
+		// 			alert("Something went wrong!");
+		// 			setisLoading(false);
+		// 		}
+		// 	})();
+		// }
 	}, [restUser, navigate, user, dispatch]);
 
 	return (

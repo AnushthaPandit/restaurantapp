@@ -26,7 +26,7 @@ const OrdersList = () => {
 			uid: user.uid,
 			cartItems,
 		})
-		navigate("/checkout/"+doc_id);
+		navigate("/checkout/"+doc_id+"?repeated=true");
 	};
 
 	useEffect(() => {

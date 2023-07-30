@@ -145,12 +145,22 @@ const OrderDeatils = () => {
 								</div> */}
 								<div class="flex justify-between items-center w-full">
 									<p class="text-base dark:text-white leading-4 text-gray-800">
-										Shipping
+										Taxes
 									</p>
 									<p class="text-base dark:text-gray-300 leading-4 text-gray-600">
 										&pound;{10.0}
 									</p>
 								</div>
+								{
+									details.substract_amount && <div class="flex justify-between items-center w-full">
+									<p class="text-base dark:text-white leading-4 text-gray-800">
+										Discount
+									</p>
+									<p class="text-base text-red-600 leading-4">
+										-&pound;{details.substract_amount}
+									</p>
+								</div>
+								}
 							</div>
 							<div class="flex justify-between items-center w-full">
 								<p class="text-base dark:text-white font-semibold leading-4 text-gray-800">
