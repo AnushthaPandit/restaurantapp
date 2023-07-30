@@ -1,9 +1,40 @@
-import React from "react";
-
-import AdminPageContainer from "../../../components/AdminPage.container";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+import AdminPageContainer from "../../../components/AdminPage.container";
+import Loader from "../../../components/Loader";
+
+import { fetch_all_users } from "../../../schemas/users.schema";
+
 const Index = () => {
+	const [isLoading, setisLoading] = useState(false);
+	const [users, setusers] = useState([]);
+
+	useEffect(() => {
+		(async () => {
+			try {
+				setisLoading(true);
+
+				const data = await fetch_all_users();
+				console.log(data);
+
+				setusers(data);
+			} catch (error) {
+				console.log(error);
+			} finally {
+				setisLoading(false);
+			}
+		})();
+	}, []);
+
+	if (isLoading) {
+		return (
+			<center>
+				<Loader />
+			</center>
+		);
+	}
+
 	return (
 		<AdminPageContainer name={"Users"}>
 			<div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -16,49 +47,31 @@ const Index = () => {
 							<th scope="col" className="px-6 py-3">
 								Full Name
 							</th>
-							<th scope="col" className="px-6 py-3">
-								Pin Code
-							</th>
+
 							<th scope="col" className="px-6 py-3">
 								Order Details
 							</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr className="bg-white border-b bg-gray-800">
-							<th
-								scope="row"
-								className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-								1
-							</th>
-							<td className="px-6 py-4">Lorem ipsum</td>
-							<td className="px-6 py-4">400</td>
+						{users.map((v, i) => (
+							<tr key={i} className="bg-white border-b bg-gray-800">
+								<th
+									scope="row"
+									className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+									{v.doc_id}
+								</th>
+								<td className="px-6 py-4">{v.displayName}</td>
 
-							<td className="px-6 py-4">
-								<Link
-									to="/admin-user-order-list/12"
-									className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-									View Orders
-								</Link>
-							</td>
-						</tr>
-						<tr className="bg-white border-b bg-gray-800">
-							<th
-								scope="row"
-								className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-								1
-							</th>
-							<td className="px-6 py-4">Lorem ipsum</td>
-							<td className="px-6 py-4">400</td>
-
-							<td className="px-6 py-4">
-								<Link
-									to="/admin-user-order-list/13"
-									className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-									View Orders
-								</Link>
-							</td>
-						</tr>
+								<td className="px-6 py-4">
+									<Link
+										to={"/admin-user-order-list/"+v.doc_id}
+										className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+										View Orders
+									</Link>
+								</td>
+							</tr>
+						))}
 					</tbody>
 				</table>
 			</div>

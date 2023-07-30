@@ -98,3 +98,22 @@ export const update_order_status = async (status, doc_id) => {
 	});
 
 };
+
+export const fetch_orders_all = async () => {
+	
+	const ordersRef	= collection(firestore, orders_schema.name)
+	const q = query(ordersRef, orderBy(orders_schema.fields.created_at, "desc"));
+
+	const querySnapshot = await getDocs(q);
+
+	const da = [];
+
+	for (const doc of querySnapshot.docs) {
+		const obj = { ...doc.data(), doc_id: doc.id }
+
+		obj.rest_details = await fetchProfileData(obj.rest_doc_id)
+		da.push(obj);
+	}
+
+	return da;
+};
