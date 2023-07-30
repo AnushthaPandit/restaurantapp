@@ -11,6 +11,8 @@ import {
 import { insert_order_data } from "../schemas/orders.schema";
 import { useStateValue } from "../context/StateProvider";
 
+import qr_image from "../img/qr_code_barcode.jpg";
+
 const Checkout = () => {
 	const [{ user }] = useStateValue();
 	const { id: checkout_doc_id } = useParams();
@@ -31,9 +33,9 @@ const Checkout = () => {
 	const [orderLoading, setorderLoading] = useState(false);
 
 	let totalPrice = 0;
-	let substract_amount = is_repeated ? 1 : 0
-	let tax_amt = 10
-	let sub_total_price = 0
+	let substract_amount = is_repeated ? 1 : 0;
+	let tax_amt = 10;
+	let sub_total_price = 0;
 
 	useEffect(() => {
 		(async () => {
@@ -121,7 +123,7 @@ const Checkout = () => {
 		return accumulator + parseFloat(item.qty) * parseFloat(item.price);
 	}, 0);
 
-	totalPrice = (sub_total_price + tax_amt) - substract_amount;
+	totalPrice = sub_total_price + tax_amt - substract_amount;
 
 	return (
 		<CustomerPage>
@@ -235,6 +237,11 @@ const Checkout = () => {
 									</div>
 								</div>
 
+								<center>
+									<h3>Please Pay your bill using below qr code</h3>
+									<img src={qr_image} alt="qr code" />
+								</center>
+
 								<div className="mt-4">
 									<button
 										type="submit"
@@ -295,7 +302,8 @@ const Checkout = () => {
 								Subtotal<span className="ml-2">&pound;{sub_total_price}</span>
 							</div>
 							<div className="flex items-center w-full py-4 text-sm font-semibold border-b border-gray-300 lg:py-5 lg:px-3 text-heading last:border-b-0 last:text-base last:pb-0">
-								Delivery And Other Taxes<span className="ml-2">&pound;{tax_amt}</span>
+								Delivery And Other Taxes
+								<span className="ml-2">&pound;{tax_amt}</span>
 							</div>
 							{is_repeated && (
 								<div className="flex items-center w-full py-4 text-sm font-semibold border-b border-gray-300 lg:py-5 lg:px-3 text-heading last:border-b-0 last:text-base last:pb-0">
@@ -304,7 +312,7 @@ const Checkout = () => {
 								</div>
 							)}
 							<div className="flex items-center w-full py-4 text-sm font-semibold border-b border-gray-300 lg:py-5 lg:px-3 text-heading last:border-b-0 last:text-base last:pb-0">
-								Total<span className="ml-2">&pound;{(totalPrice)}</span>
+								Total<span className="ml-2">&pound;{totalPrice}</span>
 							</div>
 						</div>
 					</div>
