@@ -1,8 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import AdminPageContainer from "../../../components/AdminPage.container";
+import Loader from "../../../components/Loader";
+
+import { fetchAllRestData } from "../../../schemas/restuser.schema";
 
 const Index = () => {
+	const [isLoading, setisLoading] = useState(false);
+	const [rests, setrests] = useState([]);
+
+
+	useEffect(() => {
+		(async () => {
+			try {
+				setisLoading(true);
+
+				const data = await fetchAllRestData();
+				console.log(data);
+
+				setrests(data);
+			} catch (error) {
+				console.log(error);
+			} finally {
+				setisLoading(false);
+			}
+		})();
+	}, []);
+
+	
+	if (isLoading) {
+		return (
+			<center>
+				<Loader />
+			</center>
+		);
+	}
+
 	return (
 		<AdminPageContainer name={"Restaurants"}>
 			<div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -13,10 +47,13 @@ const Index = () => {
 								Title
 							</th>
 							<th scope="col" className="px-6 py-3">
-								Description
+								Type
 							</th>
 							<th scope="col" className="px-6 py-3">
 								Address
+							</th>
+							<th scope="col" className="px-6 py-3">
+								Contact
 							</th>
 
 							<th scope="col" className="px-6 py-3">
@@ -25,40 +62,26 @@ const Index = () => {
 						</tr>
 					</thead>
 					<tbody>
-						<tr className="bg-white border-b bg-gray-800">
+						{
+							rests.map((v,i) => <tr key={i} className="bg-white border-b bg-gray-800">
 							<th
 								scope="row"
 								className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-								A Very Fancy Restaurant
+								{v.title}
 							</th>
-							<td className="px-6 py-4">Lorem ipsum</td>
-							<td className="px-6 py-4">lorem ipsum</td>
+							<td className="px-6 py-4">{ v.veg ? "Veg" : "" }{ v.nonveg ? ", Nonveg" : "" }</td>
+							<td className="px-6 py-4">{v.city}, zip:{v.zip}</td>
+							<td className="px-6 py-4">{v.contact}</td>
 
 							<td className="px-6 py-4">
-								<a
-									href="#"
+								<Link
+									to={"/restaurant/"+v.doc_id}
 									className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
 									View Details
-								</a>
+								</Link>
 							</td>
-						</tr>
-						<tr className="bg-white border-b bg-gray-800">
-							<th
-								scope="row"
-								className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-								A Not Very Fancy Restaurant
-							</th>
-							<td className="px-6 py-4">Lorem ipsum</td>
-							<td className="px-6 py-4">lorem ipsum</td>
-
-							<td className="px-6 py-4">
-								<a
-									href="#"
-									className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-									View Details
-								</a>
-							</td>
-						</tr>
+						</tr>)
+						}
 					</tbody>
 				</table>
 			</div>
