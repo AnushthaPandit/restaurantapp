@@ -12,6 +12,12 @@ const MainContainer = () => {
 	const [{ cartShow }] = useStateValue();
 	const [isLoading, setisLoading] = useState(false);
 	const [restlist, setrestlist] = useState([]);
+	const [filteredList, setfilteredList] = useState([]);
+	const [filter, setfilter] = useState("both");
+
+	const handleChange = (e) => {
+		setfilter(e.target.value);
+	};
 
 	useEffect(() => {
 		(async () => {
@@ -19,6 +25,7 @@ const MainContainer = () => {
 				setisLoading(true);
 				const data = await fetchAllRestData();
 				setrestlist(data);
+				setfilteredList(data);
 			} catch (error) {
 				console.log(error);
 				alert("Something went wrong!");
@@ -27,6 +34,22 @@ const MainContainer = () => {
 			}
 		})();
 	}, []);
+
+	useEffect(() => {
+	 if (filter === "veg") {
+		setfilteredList(restlist.filter(v => v.veg));
+		return;
+	 }
+	 if (filter === "nonveg") {
+		setfilteredList(restlist.filter(v => v.nonveg));
+		return;
+	 }
+	 if (filter === "both") {
+		setfilteredList(restlist.filter(v => v.nonveg || v.veg));
+		return;
+	 }
+	}, [filter, restlist])
+	
 
 	return (
 		<CustomerPage>
@@ -52,8 +75,23 @@ const MainContainer = () => {
 							<MdChevronRight className="text-lg text-white" />
 						</motion.div>
 					</div> */}
+						
 					</div>
-					<HotelList list={restlist} />
+					<div style={{marginTop:"2rem"}}>
+						<p>Filters:</p>
+					<select onChange={handleChange} name="filter">
+							<option value={"veg"} selected={filter === "veg"}>
+								Veg
+							</option>
+							<option value={"nonveg"} selected={filter === "nonveg"}>
+								Non Veg
+							</option>
+							<option value={"both"} selected={filter === "both"}>
+								Both
+							</option>
+						</select>
+					</div>
+					<HotelList list={filteredList} />
 				</section>
 
 				{cartShow && <CartContainer />}
