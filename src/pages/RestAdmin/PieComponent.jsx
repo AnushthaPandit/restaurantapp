@@ -1,12 +1,7 @@
 import React from "react";
 import { PieChart, Pie, Cell } from "recharts";
 
-const data = [
-	{ name: "Veg Orders", value: 450 },
-	{ name: "Non Veg Orders", value: 50 },
-];
-
-const COLORS = ["#00C49F", "#FF8042"];
+const COLORS = ["#00C49F", "#FF8042", "red"];
 
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({
@@ -34,7 +29,15 @@ const renderCustomizedLabel = ({
 	);
 };
 
-const PieComponent = () => {
+const PieComponent = ({ pending=0, placed=0, cancel=0 }) => {
+
+	const data = [
+		{ name: "Pending", value: pending },
+		{ name: "Placed", value: placed },
+		{ name: "Cancelled", value: cancel },
+	];
+	
+
 	return (
 		<div>
 			<PieChart width={300} height={300}>
@@ -53,7 +56,7 @@ const PieComponent = () => {
 				</Pie>
 			</PieChart>
 
-			<div className="grid grid-cols-2">
+			<div className="grid grid-cols-3">
 				{data.map((item, i) => (
 					<p
 						key={i}
@@ -63,7 +66,7 @@ const PieComponent = () => {
 				))}
 			</div>
 
-			<div className="grid grid-cols-2 mt-1 mb-2">
+			<div className="grid grid-cols-3 mt-1 mb-2">
 				{COLORS.map((item, i) => (
 					<div
 						className=" h-[30px] w-[30px] ml-6"

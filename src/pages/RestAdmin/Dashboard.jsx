@@ -1,11 +1,60 @@
-import React from "react";
-import { FaEllipsisV, FaRegCalendarMinus } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { FaEllipsisV } from "react-icons/fa";
 import { BiStats } from "react-icons/bi";
-import PieComponent from "./PieComponent";
 
+import PieComponent from "./PieComponent";
+import Loader from "../../components/Loader";
 import RestPageContainer from "../../components/RestPage.container";
 
+import { useStateValue } from "../../context/StateProvider";
+import { fetch_orders_by_rest_id } from "../../schemas/orders.schema";
+
 const Dashboard = () => {
+	const [{ restUser }] = useStateValue();
+	const [isLoading, setisLoading] = useState(false);
+	const [counts, setcounts] = useState({
+		pending: 0,
+		cancel: 0,
+		placed: 0,
+		total: 0,
+	});
+
+	const [pending_orders, setpending_orders] = useState([]);
+
+	useEffect(() => {
+		(async () => {
+			try {
+				setisLoading(true);
+
+				const data = await fetch_orders_by_rest_id(restUser.uid);
+
+				const pending_ord = data.filter((v) => v.status === "pending");
+				const cancel_ord = data.filter((v) => v.status === "cancel");
+				const place_ord = data.filter((v) => v.status === "placed");
+
+				setcounts({
+					pending: pending_ord.length,
+					cancel: cancel_ord.length,
+					placed: place_ord.length,
+					total: data.length,
+				});
+				setpending_orders(pending_ord);
+			} catch (error) {
+				console.log(error);
+			} finally {
+				setisLoading(false);
+			}
+		})();
+	}, [restUser.uid]);
+
+	if (isLoading) {
+		return (
+			<center>
+				<Loader />
+			</center>
+		);
+	}
+
 	return (
 		<RestPageContainer name={"Dashboard"}>
 			<div className="pt-[25px] px-[25px]">
@@ -25,7 +74,7 @@ const Dashboard = () => {
 								Pending Orders
 							</h2>
 							<h1 className="text-[20px] leading-[24px] font-bold text-[#5a5c69] mt-[5px]">
-								5
+								{counts.pending}
 							</h1>
 						</div>
 						<BiStats fontSize={25} color="" />
@@ -37,7 +86,7 @@ const Dashboard = () => {
 								Total Orders
 							</h2>
 							<h1 className="text-[20px] leading-[24px] font-bold text-[#5a5c69] mt-[5px]">
-								50
+								{counts.total}
 							</h1>
 						</div>
 						<BiStats fontSize={25} color="" />
@@ -49,7 +98,7 @@ const Dashboard = () => {
 								Placed Orders
 							</h2>
 							<h1 className="text-[20px] leading-[24px] font-bold text-[#5a5c69] mt-[5px]">
-								30
+								{counts.placed}
 							</h1>
 						</div>
 						<BiStats fontSize={25} color="" />
@@ -61,7 +110,7 @@ const Dashboard = () => {
 								Cancelled Orders
 							</h2>
 							<h1 className="text-[20px] leading-[24px] font-bold text-[#5a5c69] mt-[5px]">
-								20
+								{counts.cancel}
 							</h1>
 						</div>
 						<BiStats fontSize={25} color="" />
@@ -71,7 +120,7 @@ const Dashboard = () => {
 				<div className="flex mt-[22px] w-full gap-[20px]">
 					<div className="basis-[70%] border bg-white shadow-md cursor-pointer rounded-sm">
 						<div className="bg-[#F8F9FC] flex items-center justify-between py-[15px] px-[20px] border-b-[2px] border-[#EDEDED mb-[20px]">
-							<h2 className="font-medium">New Orders</h2>
+							<h2 className="font-medium">Pending Orders</h2>
 						</div>
 						<div>
 							<table className="items-center bg-transparent w-full border-collapse ">
@@ -93,81 +142,24 @@ const Dashboard = () => {
 								</thead>
 
 								<tbody>
-									<tr>
-										<th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700 ">
-											Johm Doe
-										</th>
-										<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">
-											2
-										</td>
-										<td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											&#8377; 340
-										</td>
-										<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											<i className="fas fa-arrow-up text-emerald-500 mr-4"></i>
-											lorem ipsum
-										</td>
-									</tr>
-									<tr>
-										<th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
-											Johm Doe
-										</th>
-										<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											5
-										</td>
-										<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											&#8377; 319
-										</td>
-										<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											<i className="fas fa-arrow-down text-orange-500 mr-4"></i>
-											lorem ipsum
-										</td>
-									</tr>
-									<tr>
-										<th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
-											Johm Doe
-										</th>
-										<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											6
-										</td>
-										<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											&#8377; 294
-										</td>
-										<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											<i className="fas fa-arrow-down text-orange-500 mr-4"></i>
-											lorem ipsum
-										</td>
-									</tr>
-									<tr>
-										<th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
-											Johm Doe
-										</th>
-										<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											10
-										</td>
-										<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											&#8377; 147
-										</td>
-										<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											<i className="fas fa-arrow-up text-emerald-500 mr-4"></i>
-											lorem ipsum
-										</td>
-									</tr>
-									<tr>
-										<th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
-											Johm Doe
-										</th>
-										<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											1
-										</td>
-										<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											&#8377; 190
-										</td>
-										<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											<i className="fas fa-arrow-down text-red-500 mr-4"></i>
-											lorem ipsum
-										</td>
-									</tr>
+									{pending_orders.map((v, i) => (
+										<tr key={i}>
+											<th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
+												{v.name}
+											</th>
+											<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+												{v.cartItems.length}
+											</td>
+											<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+												&pound;{v.total_price}
+											</td>
+											<td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+												<i className="fas fa-arrow-down text-red-500 mr-4"></i>
+												{v.address}
+											</td>
+										</tr>
+									))}
+									{ pending_orders.length === 0 && <center>NO PENDING ORDERS!</center> }
 								</tbody>
 							</table>
 						</div>
@@ -175,12 +167,12 @@ const Dashboard = () => {
 
 					<div className="basis-[30%] border bg-white shadow-md cursor-pointer rounded-sm">
 						<div className="bg-[#F8F9FC] flex items-center justify-between font-medium py-[15px] px-[20px] border-b-[2px] border-[#EDEDED]">
-							<h2>Revenue Resources</h2>
+							<h2>Orders Overview</h2>
 							<FaEllipsisV color="grey" className="cursor-pointer" />
 						</div>
 
 						<div className="flex items-center justify-center">
-							<PieComponent />
+							<PieComponent pending={counts.pending} cancel={counts.cancel} placed={counts.placed} />
 						</div>
 					</div>
 				</div>
