@@ -1,13 +1,69 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom'
 
+import Loader from "../../components/Loader";
 import RestPage from "../../components/RestPage.container";
 
+import { useStateValue } from "../../context/StateProvider";
+import { fetch_orders_by_rest_id, update_order_status } from "../../schemas/orders.schema";
+
 const OrdersList = () => {
+	const [{ restUser }] = useStateValue();
+	const navigate = useNavigate()
+
+	const [isLoading, setisLoading] = useState(false);
+	const [orders, setorders] = useState([]);
+
+	const handleViewDetails = (order_id) =>{
+		navigate("/order-details/"+order_id)
+	}
+
+	const changeStatus = async(status="pending", doc_id) =>{
+		try {
+			setisLoading(true);
+			await update_order_status(status, doc_id);
+			setorders(prev => {
+				const index = prev.findIndex(v => v.doc_id === doc_id);
+				prev[index].status = status;
+				return [...prev];
+			})
+			alert("Updated Successfully!")
+		} catch (error) {
+			alert("Something went wrong!")
+		}finally{
+			setisLoading(false)
+		}
+	}
+
+	useEffect(() => {
+		(async () => {
+			try {
+				setisLoading(true);
+
+				const data = await fetch_orders_by_rest_id(restUser.uid);
+
+				setorders(data);
+			} catch (error) {
+				console.log(error);
+			} finally {
+				setisLoading(false);
+			}
+		})();
+	}, [restUser.uid]);
+
+	if (isLoading) {
+		return (
+			<center>
+				<Loader />
+			</center>
+		);
+	}
+
 	return (
 		<RestPage name="Order List">
 			<div className="pt-[25px] px-[25px]">
 				<div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 pr-10 lg:px-8">
-					<div class="align-middle rounded-tl-lg rounded-tr-lg inline-block w-full py-4 overflow-hidden bg-white shadow-lg px-12">
+					{/* <div class="align-middle rounded-tl-lg rounded-tr-lg inline-block w-full py-4 overflow-hidden bg-white shadow-lg px-12">
 						<div class="flex justify-between">
 							<div class="inline-flex border rounded w-7/12 px-2 lg:px-6 h-12 bg-transparent">
 								<div class="flex flex-wrap items-stretch w-full h-full mb-6 relative">
@@ -43,7 +99,7 @@ const OrdersList = () => {
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> */}
 					<div class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg">
 						<table class="min-w-full">
 							<thead>
@@ -52,10 +108,10 @@ const OrdersList = () => {
 										Order ID
 									</th>
 									<th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">
-										Fullname
+										Name
 									</th>
 									<th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">
-										Email
+										pincode
 									</th>
 									<th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">
 										Price
@@ -64,192 +120,67 @@ const OrdersList = () => {
 										Status
 									</th>
 									<th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">
-										Created At
+										Ordered At
 									</th>
 									<th class="px-6 py-3 border-b-2 border-gray-300"></th>
 								</tr>
 							</thead>
 							<tbody class="bg-white">
-								<tr>
-									<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-										<div class="flex items-center">
-											<div>
-												<div class="text-sm leading-5 text-gray-800">#1</div>
+								{orders.map((v, i) => (
+									<tr key={i}>
+										<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+											<div class="flex items-center">
+												<div>
+													<div class="text-sm leading-5 text-gray-800">
+														#{v.doc_id}
+													</div>
+												</div>
 											</div>
-										</div>
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-										<div class="text-sm leading-5 text-blue-900">
-											Damilare Anjorin
-										</div>
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
-										damilareanjorin1@gmail.com
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
-										300
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
-										<span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-											<span
-												aria-hidden
-												class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-											<span class="relative text-xs">placed</span>
-										</span>
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500 text-blue-900 text-sm leading-5">
-										September 12
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-500 text-sm leading-5">
-										<button class="px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-700 hover:text-white focus:outline-none">
-											View Details
-										</button>
-									</td>
-								</tr>
-								<tr>
-									<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-										<div class="flex items-center">
-											<div>
-												<div class="text-sm leading-5 text-gray-800">#1</div>
+										</td>
+										<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+											<div class="text-sm leading-5 text-blue-900">
+												{v.name}
 											</div>
-										</div>
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-										<div class="text-sm leading-5 text-blue-900">
-											Damilare Anjorin
-										</div>
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
-										damilareanjorin1@gmail.com
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
-										300
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
-										<span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-											<span
-												aria-hidden
-												class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-											<span class="relative text-xs">placed</span>
-										</span>
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500 text-blue-900 text-sm leading-5">
-										September 12
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-500 text-sm leading-5">
-										<button class="px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-700 hover:text-white focus:outline-none">
-											View Details
-										</button>
-									</td>
-								</tr>
-								<tr>
-									<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-										<div class="flex items-center">
-											<div>
-												<div class="text-sm leading-5 text-gray-800">#1</div>
-											</div>
-										</div>
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-										<div class="text-sm leading-5 text-blue-900">
-											Damilare Anjorin
-										</div>
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
-										damilareanjorin1@gmail.com
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
-										300
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
-										<span class="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
-											<span
-												aria-hidden
-												class="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
-											<span class="relative text-xs">not placed</span>
-										</span>
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500 text-blue-900 text-sm leading-5">
-										September 12
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-500 text-sm leading-5">
-										<button class="px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-700 hover:text-white focus:outline-none">
-											View Details
-										</button>
-									</td>
-								</tr>
-								<tr>
-									<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-										<div class="flex items-center">
-											<div>
-												<div class="text-sm leading-5 text-gray-800">#1</div>
-											</div>
-										</div>
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-										<div class="text-sm leading-5 text-blue-900">
-											Damilare Anjorin
-										</div>
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
-										damilareanjorin1@gmail.com
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
-										300
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
-										<span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-											<span
-												aria-hidden
-												class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-											<span class="relative text-xs">placed</span>
-										</span>
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500 text-blue-900 text-sm leading-5">
-										September 12
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-500 text-sm leading-5">
-										<button class="px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-700 hover:text-white focus:outline-none">
-											View Details
-										</button>
-									</td>
-								</tr>
-								<tr>
-									<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-										<div class="flex items-center">
-											<div>
-												<div class="text-sm leading-5 text-gray-800">#1</div>
-											</div>
-										</div>
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-										<div class="text-sm leading-5 text-blue-900">
-											Damilare Anjorin
-										</div>
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
-										damilareanjorin1@gmail.com
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
-										300
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
-										<span class="relative inline-block px-3 py-1 font-semibold text-orange-900 leading-tight">
-											<span
-												aria-hidden
-												class="absolute inset-0 bg-orange-200 opacity-50 rounded-full"></span>
-											<span class="relative text-xs">Pending</span>
-										</span>
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500 text-blue-900 text-sm leading-5">
-										September 12
-									</td>
-									<td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-500 text-sm leading-5">
-										<button class="px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-700 hover:text-white focus:outline-none">
-											View Details
-										</button>
-									</td>
-								</tr>
+										</td>
+										<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
+											{v.postcode}
+										</td>
+										<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
+											&pound;{v.total_price}
+										</td>
+										<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5 cursor-pointer">
+											{/* {v.status === "pending" ? (
+												<span class="relative inline-block px-3 py-1 font-semibold text-orange-900 leading-tight">
+													<span
+														aria-hidden
+														class="absolute inset-0 bg-orange-200 opacity-50 rounded-full"></span>
+													<span class="relative text-xs">Pending</span>
+												</span>
+											) : (
+												<span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+													<span
+														aria-hidden
+														class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
+													<span class="relative text-xs">placed</span>
+												</span>
+											)} */}
+
+											<select onChange={(e) => changeStatus(e.target.value, v.doc_id)} name="Status">
+												<option value={"pending"} selected={v.status === "pending"}>Pending</option>
+												<option value={"placed"} selected={v.status === "placed"}>Placed</option>
+												<option value={"cancel"} selected={v.status === "cancel"}>Cancelled</option>
+											</select>
+										</td>
+										<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500 text-blue-900 text-sm leading-5">
+											{v.created_at?.toDate()?.toString()}
+										</td>
+										<td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-500 text-sm leading-5">
+											<button onClick={() =>handleViewDetails(v.doc_id)} class="px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-700 hover:text-white focus:outline-none">
+												View Details
+											</button>
+										</td>
+									</tr>
+								))}
 							</tbody>
 						</table>
 					</div>

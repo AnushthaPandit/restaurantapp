@@ -7,7 +7,8 @@ import {
 	where,
     addDoc,
 	serverTimestamp,
-	orderBy
+	orderBy,
+	updateDoc
 } from "firebase/firestore";
 import { fetchProfileData } from "./restuser.schema";
 import { firestore } from "../firebase.config";
@@ -16,7 +17,9 @@ const orders_schema = {
 	name: "orders",
 	fields: {
 		uid:"uid",
-		created_at:"created_at"
+		rest_doc_id: "rest_doc_id",
+		created_at:"created_at",
+		status:"status"
 	},
 };
 
@@ -59,6 +62,23 @@ export const fetch_orders_by_user_uid = async (uid) => {
 	return da;
 };
 
+export const fetch_orders_by_rest_id = async (rest_doc_id) => {
+	
+	const ordersRef	= collection(firestore, orders_schema.name)
+	const q = query(ordersRef, where(orders_schema.fields.rest_doc_id, "==", rest_doc_id), orderBy(orders_schema.fields.created_at, "desc"));
+
+	const querySnapshot = await getDocs(q);
+
+	const da = [];
+
+	for (const doc of querySnapshot.docs) {
+		const obj = { ...doc.data(), doc_id: doc.id }
+		da.push(obj);
+	}
+
+	return da;
+};
+
 export const fetch_single_order = async (doc_id) => {
 	const docRef = doc(firestore, orders_schema.name, doc_id);
 	const docSnap = await getDoc(docRef);
@@ -68,4 +88,13 @@ export const fetch_single_order = async (doc_id) => {
 	} else {
 		return null;
 	}
+};
+
+export const update_order_status = async (status, doc_id) => {
+	const docRef = doc(firestore, orders_schema.name, doc_id);
+	
+	await updateDoc(docRef, {
+		[orders_schema.fields.status]: status
+	});
+
 };
