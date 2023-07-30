@@ -13,6 +13,7 @@ import AddFood from "./pages/RestAdmin/AddFood";
 import EditFoodItem from "./pages/RestAdmin/EditFoodItem";
 import ProfileDetails from "./pages/RestAdmin/ProfileDetails";
 import OrdersList from "./pages/RestAdmin/OrdersList";
+import AdminLogin from "./pages/Admin/Login";
 import AdminDash from "./pages/Admin/Dashboard";
 import AdminRestList from "./pages/Admin/RestList";
 import AdminOrdersList from "./pages/Admin/OrdersList";
@@ -112,13 +113,46 @@ const App = () => {
 							</PrivateRoute>
 						}
 					/>
-					<Route path="/admin" element={<AdminDash />} />
-					<Route path="/admin-rest-list" element={<AdminRestList />} />
-					<Route path="/admin-orders-list" element={<AdminOrdersList />} />
-					<Route path="/admin-users-list" element={<AdminUserList />} />
+					<Route path="/admin-login" element={<AdminLogin />} />
+					<Route
+						path="/admin"
+						element={
+							<PrivateRoute role="admin">
+								<AdminDash />
+							</PrivateRoute>
+						}
+					/>
+					<Route
+						path="/admin-rest-list"
+						element={
+							<PrivateRoute role="admin">
+								<AdminRestList />
+							</PrivateRoute>
+						}
+					/>
+					<Route
+						path="/admin-orders-list"
+						element={
+							<PrivateRoute role="admin">
+								<AdminOrdersList />
+							</PrivateRoute>
+						}
+					/>
+					<Route
+						path="/admin-users-list"
+						element={
+							<PrivateRoute role="admin">
+								<AdminUserList />
+							</PrivateRoute>
+						}
+					/>
 					<Route
 						path="/admin-user-order-list/:id"
-						element={<AdminUserOrderList />}
+						element={
+							<PrivateRoute role="admin">
+								<AdminUserOrderList />
+							</PrivateRoute>
+						}
 					/>
 					<Route path="/order-details/:id" element={<OrderDeatils />} />
 				</Routes>

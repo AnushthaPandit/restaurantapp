@@ -3,12 +3,21 @@ import {
 	FaUsers,
 	FaChevronRight,
 	FaRegCalendar,
-	FaRegSun,
 	FaTachometerAlt,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+import { delAdminUser } from "../utils/fetchLocalStorageData";
 
 const AdminSidebar = () => {
+
+	const navigte = useNavigate()
+
+	const logout  = () =>{
+		delAdminUser();
+		navigte("/")
+	}
+
 	return (
 		<div className="bg-[#7D1E6A] h-screen px-[25px]">
 			<div className="px-[12px] py-[25px] flex items-center justify-center border-b-[2px] border-[#EDEDED]/[0.3]">
@@ -77,6 +86,21 @@ const AdminSidebar = () => {
 					</div>
 					<FaChevronRight color="white" />
 				</div> */}
+			</div>
+			<div className="pt-[15px] border-b-[2px] border-[#EDEDED]/[0.3]">
+				<p className="text-[14px] font-extrabold leading-[16px] text-white/[0.4]">
+					Utils
+				</p>
+
+				<button
+					onClick={logout}
+					className="flex items-center justify-between gap-[10px] py-[15px] cursor-pointer">
+					<div className="flex items-center gap-[10px] text-white">
+						<FaUsers />
+						<p className="text-[14px] leading-7 font-normal">Log out</p>
+					</div>
+				</button>
+				
 			</div>
 		</div>
 	);
