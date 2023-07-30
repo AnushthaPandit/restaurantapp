@@ -5,11 +5,20 @@ import {
 	FaRegCalendar,
 	FaRegSun,
 	FaTachometerAlt,
-	FaWrench,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+import {delRestUser} from "../utils/fetchLocalStorageData"
 
 const Sidebar = () => {
+
+	const navigate = useNavigate();
+
+	const logout = () =>{
+		delRestUser()
+		navigate("/")
+	}
+
 	return (
 		<div className="bg-orange-500 h-screen px-[25px]">
 			<div className="px-[12px] py-[25px] flex items-center justify-center border-b-[2px] border-[#EDEDED]/[0.3]">
@@ -80,6 +89,14 @@ const Sidebar = () => {
 					</div>
 					<FaChevronRight color="white" />
 				</Link>
+				<button
+					onClick={logout}
+					className="flex items-center justify-between gap-[10px] py-[15px] cursor-pointer">
+					<div className="flex items-center gap-[10px] text-white">
+						<FaRegSun />
+						<p className="text-[14px] leading-7 font-normal">Log Out</p>
+					</div>
+				</button>
 				{/* <div className="flex items-center justify-between gap-[10px] py-[15px] cursor-pointer">
 					<div className="flex items-center gap-[10px] text-white">
 						<FaWrench />
@@ -88,6 +105,7 @@ const Sidebar = () => {
 					<FaChevronRight color="white" />
 				</div> */}
 			</div>
+			
 		</div>
 	);
 };

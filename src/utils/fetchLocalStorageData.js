@@ -19,6 +19,9 @@ export const fetchRestUser = () => {
 export const setRestUser = (data = {}) => {
 	localStorage.setItem("city:restuser", JSON.stringify(data));
 };
+export const delRestUser = () => {
+	localStorage.removeItem("city:restuser");
+};
 
 export const fetchCart = () => {
 	const cartInfo =

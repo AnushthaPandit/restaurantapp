@@ -117,3 +117,22 @@ export const fetch_orders_all = async () => {
 
 	return da;
 };
+
+export const orders_count = async () => {
+	
+	const ordersRef	= collection(firestore, orders_schema.name)
+	const pendingq = query(ordersRef, where(orders_schema.fields.status, "==", "pending"));
+	const placeq = query(ordersRef, where(orders_schema.fields.status, "==", "placed"));
+	const cancelq = query(ordersRef, where(orders_schema.fields.status, "==", "cancel"));
+
+	const { size:pendingsize } = await getDocs(pendingq);
+	const { size:placesize } = await getDocs(placeq);
+	const { size:cancelsize } = await getDocs(cancelq);
+
+	return {
+		placed:placesize,
+		cancelled: cancelsize,
+		pending:pendingsize,
+		total: placesize + cancelsize + pendingsize
+	}
+};

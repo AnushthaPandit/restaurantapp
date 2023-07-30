@@ -47,3 +47,12 @@ export const fetch_user_by_uid = async (uid) => {
 	}
 };
 
+export const users_count = async () => {
+	
+	const restRef	= collection(firestore, users_schema.name)
+	
+	const { size } = await getDocs(restRef);
+
+	return size
+};
+

@@ -3,7 +3,7 @@ import {
 	getDoc,
 	doc,
 	getDocs,
-	orderBy,
+	where,
 	query,
 	setDoc,
 } from "firebase/firestore";
@@ -43,3 +43,13 @@ export const fetchProfileData = async (uid) => {
 		return null;
 	}
 };
+
+export const rests_count = async () => {
+	
+	const restRef	= collection(firestore, restusers_schema.name)
+	
+	const { size } = await getDocs(restRef);
+
+	return size
+};
+

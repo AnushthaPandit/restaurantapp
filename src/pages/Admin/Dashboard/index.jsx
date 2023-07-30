@@ -1,12 +1,92 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { FaEllipsisV, FaUsers } from "react-icons/fa";
 import { BiRestaurant, BiStats } from "react-icons/bi";
 
 import PieComponent from "./PieComponent";
+import Loader from "../../../components/Loader";
 import AdminPageContainer from "../../../components/AdminPage.container";
 
+import {
+	orders_count,
+	fetch_orders_by_rest_id,
+} from "../../../schemas/orders.schema";
+import {
+	rests_count,
+	fetchAllRestData,
+} from "../../../schemas/restuser.schema";
+import { users_count } from "../../../schemas/users.schema";
+
 const Index = () => {
+	const [isLoading, setisLoading] = useState(false);
+	const [rest_details, setrest_details] = useState([]);
+	const [counts, setcounts] = useState({
+		rests: 0,
+		users: 0,
+		placed: 0,
+		cancelled: 0,
+		pending: 0
+	});
+
+	useEffect(() => {
+		(async () => {
+			try {
+				setisLoading(true);
+
+				const data = await orders_count();
+				const rests = await rests_count();
+				const users = await users_count();
+
+				const rests_data = [];
+
+				const all_rests = await fetchAllRestData();
+
+				for (const rest of all_rests) {
+					const order_data = await fetch_orders_by_rest_id(rest.doc_id);
+					if (order_data) {
+						const pending_ord = order_data.filter(
+							(v) => v.status === "pending"
+						);
+						const cancel_ord = order_data.filter((v) => v.status === "cancel");
+						const place_ord = order_data.filter((v) => v.status === "placed");
+
+						rests_data.push({
+							...rest,
+							placed_count: place_ord.length,
+							cancel_count: cancel_ord.length,
+							pending_count: pending_ord.length,
+							total_revenue: place_ord.reduce(function (accumulator, item) {
+								return accumulator + parseFloat(item.total_price);
+							}, 0),
+						});
+					}
+				}
+
+				setcounts({
+					rests,
+					users,
+					placed: data.placed,
+					cancelled: data.cancelled,
+					pending: data.pending
+				});
+				setrest_details(rests_data.sort(
+					(r1, r2) => (r1.total_revenue < r2.total_revenue) ? 1 : (r1.total_revenue > r2.total_revenue) ? -1 : 0));
+			} catch (error) {
+				console.log(error);
+			} finally {
+				setisLoading(false);
+			}
+		})();
+	}, []);
+
+	if (isLoading) {
+		return (
+			<center>
+				<Loader />
+			</center>
+		);
+	}
+
 	return (
 		<AdminPageContainer name={"Dashboard"}>
 			<div>
@@ -26,7 +106,7 @@ const Index = () => {
 								Total Restaurants
 							</h2>
 							<h1 className="text-[20px] leading-[24px] font-bold text-[#5a5c69] mt-[5px]">
-								50
+								{counts.rests}
 							</h1>
 						</div>
 						<BiRestaurant fontSize={25} color="" />
@@ -38,7 +118,7 @@ const Index = () => {
 								Total Users
 							</h2>
 							<h1 className="text-[20px] leading-[24px] font-bold text-[#5a5c69] mt-[5px]">
-								1000
+								{counts.users}
 							</h1>
 						</div>
 						<FaUsers fontSize={25} color="" />
@@ -50,7 +130,7 @@ const Index = () => {
 								Placed Orders
 							</h2>
 							<h1 className="text-[20px] leading-[24px] font-bold text-[#5a5c69] mt-[5px]">
-								40
+								{counts.placed}
 							</h1>
 						</div>
 						<BiStats fontSize={25} color="" />
@@ -62,7 +142,7 @@ const Index = () => {
 								Cancellled Orders
 							</h2>
 							<h1 className="text-[20px] leading-[24px] font-bold text-[#5a5c69] mt-[5px]">
-								10
+								{counts.cancelled}
 							</h1>
 						</div>
 						<BiStats fontSize={25} color="" />
@@ -88,65 +168,35 @@ const Index = () => {
 										<th class="px-6s bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
 											Total Cancelled Orders
 										</th>
+										<th class="px-6s bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+											Total Pending Orders
+										</th>
+										<th class="px-6s bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+											Revenue
+										</th>
 									</tr>
 								</thead>
 
 								<tbody>
-									<tr>
-										<th class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700 ">
-											Johm Doe
-										</th>
-										<td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">
-											2
-										</td>
-										<td class="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											340
-										</td>
-									</tr>
-									<tr>
-										<th class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
-											Johm Doe
-										</th>
-										<td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											5
-										</td>
-										<td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											319
-										</td>
-									</tr>
-									<tr>
-										<th class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
-											Johm Doe
-										</th>
-										<td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											6
-										</td>
-										<td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											294
-										</td>
-									</tr>
-									<tr>
-										<th class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
-											Johm Doe
-										</th>
-										<td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											10
-										</td>
-										<td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											147
-										</td>
-									</tr>
-									<tr>
-										<th class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
-											Johm Doe
-										</th>
-										<td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											1
-										</td>
-										<td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-											190
-										</td>
-									</tr>
+									{rest_details.map((v, i) => (
+										<tr key={i}>
+											<th class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700 ">
+												{v.title}
+											</th>
+											<td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">
+												{v.placed_count}
+											</td>
+											<td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">
+												{v.cancel_count}
+											</td>
+											<td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">
+												{v.pending_count}
+											</td>
+											<td class="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+												&pound;{v.total_revenue}
+											</td>
+										</tr>
+									))}
 								</tbody>
 							</table>
 						</div>
@@ -159,7 +209,7 @@ const Index = () => {
 						</div>
 
 						<div className="flex items-center justify-center">
-							<PieComponent />
+							<PieComponent placed={counts.placed} cancel={counts.cancelled} pending={counts.pending} />
 						</div>
 					</div>
 				</div>
