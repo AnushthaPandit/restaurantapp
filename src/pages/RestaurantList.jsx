@@ -36,25 +36,41 @@ const MainContainer = () => {
 	}, []);
 
 	useEffect(() => {
-	 if (filter === "veg") {
-		setfilteredList(restlist.filter(v => v.veg));
-		return;
-	 }
-	 if (filter === "nonveg") {
-		setfilteredList(restlist.filter(v => v.nonveg));
-		return;
-	 }
-	 if (filter === "both") {
-		setfilteredList(restlist.filter(v => v.nonveg || v.veg));
-		return;
-	 }
-	}, [filter, restlist])
-	
+		if (filter === "veg") {
+			setfilteredList(restlist.filter((v) => v.veg));
+			return;
+		}
+		if (filter === "nonveg") {
+			setfilteredList(restlist.filter((v) => v.nonveg));
+			return;
+		}
+		if (filter === "both") {
+			setfilteredList(restlist.filter((v) => v.nonveg || v.veg));
+			return;
+		}
+	}, [filter, restlist]);
 
 	return (
 		<CustomerPage>
 			<div className="w-full h-auto flex flex-col items-center justify-center min-h-full">
-				<section className="w-full my-6">
+				<section class="showcase-area border w-[100%]" id="showcase">
+					<div class="showcase-container">
+						<div>
+							<h1 class="text-5xl text-center mb-2" id="home">
+								Eat Right Food
+							</h1>
+							<p className="text-2xl text-center">
+								Eat Healty, it is good for our health.
+							</p>
+						</div>
+						<a
+							href="#rest"
+							class="bg-gradient-to-br from-orange-400 to-orange-500 w-full md:w-auto px-4 py-2  rounded-lg hover:shadow-lg transition-all ease-in-out duration-100">
+							Find Restaurants
+						</a>
+					</div>
+				</section>
+				<section id="rest" className="w-full my-6">
 					{isLoading ? <Loader /> : null}
 					<div className="w-full flex items-center justify-between">
 						<p className="text-2xl font-semibold capitalize text-headingColor relative before:absolute before:rounded-lg before:content before:w-32 before:h-1 before:-bottom-2 before:left-0 before:bg-gradient-to-tr from-orange-400 to-orange-600 transition-all ease-in-out duration-100">
@@ -75,11 +91,10 @@ const MainContainer = () => {
 							<MdChevronRight className="text-lg text-white" />
 						</motion.div>
 					</div> */}
-						
 					</div>
-					<div style={{marginTop:"2rem"}}>
+					<div style={{ marginTop: "2rem" }}>
 						<p>Filters:</p>
-					<select onChange={handleChange} name="filter">
+						<select onChange={handleChange} name="filter">
 							<option value={"veg"} selected={filter === "veg"}>
 								Veg
 							</option>

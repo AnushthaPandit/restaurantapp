@@ -74,7 +74,7 @@ const Header = ({ doShowCart, cartItemsCount }) => {
 							className="text-lg text-textColor hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer">
 							Home
 						</Link>
-						<Link
+						{/* <Link
 							to="/rest-admin"
 							className="text-lg text-textColor hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer">
 							Restaurant Login
@@ -83,7 +83,7 @@ const Header = ({ doShowCart, cartItemsCount }) => {
 							to="/admin"
 							className="text-lg text-textColor hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer">
 							Admin
-						</Link>
+						</Link> */}
 						{/* <li className="text-lg text-textColor hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer">
 							Menu
 						</li> */}

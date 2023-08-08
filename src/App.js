@@ -22,6 +22,8 @@ import AdminUserOrderList from "./pages/Admin/UserOrderList";
 import OrderDeatils from "./pages/OrderDeatils";
 
 import PrivateRoute from "./components/PrivateRoute";
+import Footer from "./components/Footer";
+
 import { useStateValue } from "./context/StateProvider";
 import { getAllFoodItems } from "./utils/firebaseFunctions";
 import { actionType } from "./context/reducer";
@@ -157,6 +159,7 @@ const App = () => {
 					<Route path="/order-details/:id" element={<OrderDeatils />} />
 				</Routes>
 			</div>
+			<Footer />
 		</AnimatePresence>
 	);
 };
