@@ -98,7 +98,7 @@ const Checkout = () => {
 			total_price: totalPrice,
 			is_repeated,
 			substract_amount,
-			code_data,
+			code_data: code_data ? code_data : null,
 			percent_price_to_deduct,
 		};
 
@@ -139,10 +139,12 @@ const Checkout = () => {
 
 	if (selectedCode) {
 		code_data = codeslist.find((v) => v.doc_id === selectedCode);
-		percent_price_to_deduct = Number(
-			(code_data.off / 100) * totalPrice
-		).toFixed(2); //will return 12% of total
-		totalPrice = Number(totalPrice - percent_price_to_deduct).toFixed(2);
+		if (code_data) {
+			percent_price_to_deduct = Number(
+				(code_data.off / 100) * totalPrice
+			).toFixed(2); //will return 12% of total
+			totalPrice = Number(totalPrice - percent_price_to_deduct).toFixed(2);
+		}
 	}
 
 	return (
@@ -353,7 +355,7 @@ const Checkout = () => {
 									<span className="ml-2 text-red-600">-&pound;1</span>
 								</div>
 							)}
-							{selectedCode && (
+							{selectedCode && code_data && (
 								<div className="flex items-center w-full py-4 text-sm font-semibold border-b border-gray-300 lg:py-5 lg:px-3 text-heading last:border-b-0 last:text-base last:pb-0">
 									{code_data.title} Discount ({code_data.off}%)
 									<span className="ml-2 text-red-600">

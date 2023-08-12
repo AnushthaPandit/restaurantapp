@@ -15,25 +15,25 @@ import ReviewBox from "../components/ReviewBox";
 const reviews = [
 	{
 		id: 1,
-		name: "Sachin Roy",
+		name: "Oliver Jake",
 		rating: 5,
 		desc: "Nice rest.",
 	},
 	{
 		id: 2,
-		name: "Anustna Pandit",
+		name: "Amelia",
 		rating: 4,
 		desc: "Quality Food.",
 	},
 	{
 		id: 3,
-		name: "Pushkal Pandey",
+		name: "John Doe",
 		rating: 3,
 		desc: "Serves Hot.",
 	},
 	{
 		id: 4,
-		name: "Kuran M",
+		name: "Emily",
 		rating: 2,
 		desc: "Customer Service is nice.",
 	},
@@ -47,6 +47,7 @@ const RestDetails = () => {
 	const [foodItems, setfoodItems] = useState([]);
 	const [restDetails, setrestDetails] = useState();
 	const [cartItems, setcartItems] = useState([]);
+	const [descText, setdescText] = useState("");
 
 	const addToCart = (item) => {
 		const itemIndex = cartItems.findIndex((v) => v.doc_id === item.doc_id);
@@ -82,6 +83,7 @@ const RestDetails = () => {
 		setTimeout(() => {
 			alert("Submitted!, rating will be published after review.");
 			setisReviewLoading(false);
+			setdescText("");
 		}, 1500);
 	};
 
@@ -137,7 +139,7 @@ const RestDetails = () => {
 
 					<div className="w-full flex flex-col items-center justify-center">
 						<div style={{ width: "500px" }}>
-							{!user ? (
+							{user ? (
 								<form onSubmit={handleReviewSubmit} className="mb-5">
 									<div className="mb-5">
 										<h3 className="text-xl">Write a review</h3>
@@ -167,9 +169,11 @@ const RestDetails = () => {
 											class="block mb-2 text-sm font-medium text-gray-900">
 											Your Description
 										</label>
-										<textarea
+										<input
+											onChange={(e) => setdescText(e.target.value)}
+											value={descText}
 											className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 border-gray-600 text-white"
-											required></textarea>
+											required></input>
 									</div>
 									<button
 										type="submit"
