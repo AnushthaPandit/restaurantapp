@@ -8,24 +8,23 @@ import {
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
-import {delRestUser} from "../utils/fetchLocalStorageData"
+import { delRestUser } from "../utils/fetchLocalStorageData";
 import { useStateValue } from "../context/StateProvider";
-import { actionType } from '../context/reducer'
+import { actionType } from "../context/reducer";
 
 const Sidebar = () => {
-
 	const navigate = useNavigate();
-	const [{}, dispatch] =useStateValue()
+	const [{}, dispatch] = useStateValue();
 
-	const logout = () =>{
-		delRestUser()
+	const logout = () => {
+		delRestUser();
 		dispatch({
 			type: actionType.SET_REST_USER,
 			restUser: null,
 		});
 
-		navigate("/")
-	}
+		navigate("/");
+	};
 
 	return (
 		<div className="bg-orange-500 h-screen px-[25px]">
@@ -82,6 +81,15 @@ const Sidebar = () => {
 					</div>
 					<FaChevronRight color="white" />
 				</Link>
+				<Link
+					to="/rest-codes-list"
+					className="flex items-center justify-between gap-[10px] py-[15px] cursor-pointer">
+					<div className="flex items-center gap-[10px] text-white">
+						<FaRegCalendar />
+						<p className="text-[14px] leading-7 font-normal">Promo Codes</p>
+					</div>
+					<FaChevronRight color="white" />
+				</Link>
 			</div>
 			<div className="pt-[15px] border-b-[2px] border-[#EDEDED]/[0.3]">
 				<p className="text-[14px] font-extrabold leading-[16px] text-white/[0.4]">
@@ -113,7 +121,6 @@ const Sidebar = () => {
 					<FaChevronRight color="white" />
 				</div> */}
 			</div>
-			
 		</div>
 	);
 };

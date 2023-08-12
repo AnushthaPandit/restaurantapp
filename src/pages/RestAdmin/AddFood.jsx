@@ -109,6 +109,7 @@ const AddFood = () => {
 					qty: 1,
 					price: price,
 					uid: restUser.uid,
+					isInStock: true,
 				};
 				saveItem(data);
 				setIsLoading(false);

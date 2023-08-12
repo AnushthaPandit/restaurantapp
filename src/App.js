@@ -13,6 +13,7 @@ import AddFood from "./pages/RestAdmin/AddFood";
 import EditFoodItem from "./pages/RestAdmin/EditFoodItem";
 import ProfileDetails from "./pages/RestAdmin/ProfileDetails";
 import OrdersList from "./pages/RestAdmin/OrdersList";
+import PromoCodesList from "./pages/RestAdmin/PromoCodes";
 import AdminLogin from "./pages/Admin/Login";
 import AdminDash from "./pages/Admin/Dashboard";
 import AdminRestList from "./pages/Admin/RestList";
@@ -104,6 +105,14 @@ const App = () => {
 						element={
 							<PrivateRoute role="restUser">
 								<OrdersList />
+							</PrivateRoute>
+						}
+					/>
+					<Route
+						path="/rest-codes-list"
+						element={
+							<PrivateRoute role="restUser">
+								<PromoCodesList />
 							</PrivateRoute>
 						}
 					/>

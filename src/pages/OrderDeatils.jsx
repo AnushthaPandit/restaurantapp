@@ -35,6 +35,8 @@ const OrderDeatils = () => {
 		return <center> NO Page Found!</center>;
 	}
 
+	console.log(details);
+
 	return (
 		<div class="py-14 px-4 md:px-6 2xl:px-20 2xl:container 2xl:mx-auto">
 			<div class="flex justify-start item-start space-y-2 flex-col">
@@ -151,16 +153,27 @@ const OrderDeatils = () => {
 										&pound;{10.0}
 									</p>
 								</div>
-								{
-									details.substract_amount && <div class="flex justify-between items-center w-full">
-									<p class="text-base dark:text-white leading-4 text-gray-800">
-										Discount
-									</p>
-									<p class="text-base text-red-600 leading-4">
-										-&pound;{details.substract_amount}
-									</p>
-								</div>
-								}
+								{details.substract_amount && (
+									<div class="flex justify-between items-center w-full">
+										<p class="text-base dark:text-white leading-4 text-gray-800">
+											Repeate Order Discount
+										</p>
+										<p class="text-base text-red-600 leading-4">
+											-&pound;{details.substract_amount}
+										</p>
+									</div>
+								)}
+
+								{details.code_data && (
+									<div class="flex justify-between items-center w-full">
+										<p class="text-base dark:text-white leading-4 text-gray-800">
+											{details.code_data.title} ({details.code_data.off}% Off)
+										</p>
+										<p class="text-base text-red-600 leading-4">
+											-&pound;{details.percent_price_to_deduct}
+										</p>
+									</div>
+								)}
 							</div>
 							<div class="flex justify-between items-center w-full">
 								<p class="text-base dark:text-white font-semibold leading-4 text-gray-800">

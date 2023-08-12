@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import NotFound from "../img/NotFound.svg";
 
 const RowContainer = ({ flag, data, addToCart }) => {
-
 	return (
 		<div
 			className={`w-full flex items-center gap-3  my-12 scroll-smooth  ${
@@ -44,7 +43,8 @@ const RowContainer = ({ flag, data, addToCart }) => {
                 </p> */}
 							<div className="flex items-center gap-8">
 								<p className="text-lg text-headingColor font-semibold">
-									<span className="text-sm text-red-500">$</span> {item?.price}
+									<span className="text-sm text-red-500">&pound;</span>{" "}
+									{item?.price}
 								</p>
 							</div>
 						</div>

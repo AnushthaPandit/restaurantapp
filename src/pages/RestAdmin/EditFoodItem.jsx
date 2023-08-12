@@ -30,6 +30,7 @@ const EditFoodItem = () => {
 	const [alertStatus, setAlertStatus] = useState("danger");
 	const [msg, setMsg] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isInStock, setisInStock] = useState(false);
 
 	const navigate = useNavigate();
 	const { id: food_item_id } = useParams();
@@ -104,6 +105,7 @@ const EditFoodItem = () => {
 					isVeg,
 					category: category,
 					price: price,
+					isInStock,
 				};
 				await updateFoodItem(data, food_item_id);
 				setIsLoading(false);
@@ -151,6 +153,7 @@ const EditFoodItem = () => {
 				setPrice(d.price);
 				setCategory(d.category);
 				setImageAsset(d.imageURL);
+				setisInStock(d.isInStock);
 			} catch (error) {
 				setFields(true);
 				setMsg("Error while fetching data : Try AGain 🙇");
@@ -261,16 +264,7 @@ const EditFoodItem = () => {
 					</div>
 
 					<div className="w-full flex flex-col md:flex-row items-center gap-3">
-						<div className="w-full py-2 border-b border-gray-300 flex items-center gap-2">
-							{/* <MdFoodBank className="text-gray-700 text-2xl" />
-							<input
-								type="text"
-								required
-								value={calories}
-								onChange={(e) => setCalories(e.target.value)}
-								placeholder="Calories"
-								className="w-full h-full text-lg bg-transparent outline-none border-none placeholder:text-gray-400 text-textColor"
-							/> */}
+						<div className="w-full flex-1 py-2 border-b border-gray-300 flex items-center gap-2">
 							<div
 								style={{ gap: "1rem" }}
 								className="flex items-center rounded">
@@ -290,7 +284,7 @@ const EditFoodItem = () => {
 							</div>
 						</div>
 
-						<div className="w-full py-2 border-b border-gray-300 flex items-center gap-2">
+						<div className="flex-1 w-full py-2 border-b border-gray-300 flex items-center gap-2">
 							<FaPoundSign className="text-gray-700 text-xl" />
 							<input
 								type="text"
@@ -300,6 +294,23 @@ const EditFoodItem = () => {
 								placeholder="Price"
 								className="w-full h-full text-lg bg-transparent outline-none border-none placeholder:text-gray-400 text-textColor"
 							/>
+						</div>
+						<div
+							style={{ gap: "1rem" }}
+							className="flex flex-1 items-center rounded">
+							<input
+								onChange={(e) => setisInStock(e.target.checked)}
+								checked={isInStock}
+								id="bordered-checkbox-1"
+								type="checkbox"
+								name="instock"
+								className="w-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+							/>
+							<label
+								for="bordered-checkbox-1"
+								className="w-full h-full text-lg bg-transparent outline-none border-none placeholder:text-gray-400 text-textColor">
+								In Stock
+							</label>
 						</div>
 					</div>
 

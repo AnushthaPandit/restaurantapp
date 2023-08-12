@@ -9,6 +9,7 @@ import {
 	delete_checkout,
 } from "../schemas/checkout.schema";
 import { insert_order_data } from "../schemas/orders.schema";
+import { fetchAllCodesData } from "../schemas/promo_codes.schema";
 import { useStateValue } from "../context/StateProvider";
 
 import qr_image from "../img/qr_code_barcode.jpg";
@@ -18,6 +19,8 @@ const Checkout = () => {
 	const { id: checkout_doc_id } = useParams();
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
+	const [codeslist, setcodeslist] = useState([]);
+	const [selectedCode, setselectedCode] = useState(null);
 
 	const is_repeated = searchParams.get("repeated") === "true";
 
@@ -36,6 +39,8 @@ const Checkout = () => {
 	let substract_amount = is_repeated ? 1 : 0;
 	let tax_amt = 10;
 	let sub_total_price = 0;
+	let code_data = null;
+	let percent_price_to_deduct = 0;
 
 	useEffect(() => {
 		(async () => {
@@ -43,7 +48,10 @@ const Checkout = () => {
 				setisLoading(true);
 
 				const data = await fetch_checkout_by_id(checkout_doc_id);
-
+				if (data) {
+					const codes = await fetchAllCodesData(data.rest_doc_id);
+					setcodeslist(codes);
+				}
 				setdetails(data);
 			} catch (error) {
 			} finally {
@@ -82,7 +90,7 @@ const Checkout = () => {
 
 		setorderLoading(true);
 
-		await insert_order_data({
+		const dt = {
 			...details,
 			...formState,
 			status: "pending",
@@ -90,7 +98,11 @@ const Checkout = () => {
 			total_price: totalPrice,
 			is_repeated,
 			substract_amount,
-		});
+			code_data,
+			percent_price_to_deduct,
+		};
+
+		await insert_order_data(dt);
 		await delete_checkout(checkout_doc_id);
 
 		setorderLoading(false);
@@ -124,6 +136,14 @@ const Checkout = () => {
 	}, 0);
 
 	totalPrice = sub_total_price + tax_amt - substract_amount;
+
+	if (selectedCode) {
+		code_data = codeslist.find((v) => v.doc_id === selectedCode);
+		percent_price_to_deduct = Number(
+			(code_data.off / 100) * totalPrice
+		).toFixed(2); //will return 12% of total
+		totalPrice = Number(totalPrice - percent_price_to_deduct).toFixed(2);
+	}
 
 	return (
 		<CustomerPage>
@@ -295,6 +315,28 @@ const Checkout = () => {
 									))}
 								</div>
 							</div>
+							{codeslist.length > 0 ? (
+								<div className="mb-3">
+									<label
+										for="rating"
+										class="block mb-2 text-sm font-medium text-gray-900">
+										Promo Codes
+									</label>
+									<select
+										id="rating"
+										required
+										value={selectedCode}
+										onChange={(e) => setselectedCode(e.target.value)}
+										class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+										<option>Select Promo Code</option>
+										{codeslist.map((v, i) => (
+											<option key={i} value={v.doc_id}>
+												{v.title} ({v.off}%)
+											</option>
+										))}
+									</select>
+								</div>
+							) : null}
 							<div className="flex p-4 mt-4">
 								<h2 className="text-xl font-bold">Total</h2>
 							</div>
@@ -309,6 +351,14 @@ const Checkout = () => {
 								<div className="flex items-center w-full py-4 text-sm font-semibold border-b border-gray-300 lg:py-5 lg:px-3 text-heading last:border-b-0 last:text-base last:pb-0">
 									Repeated Order Discount (&pound;{substract_amount})
 									<span className="ml-2 text-red-600">-&pound;1</span>
+								</div>
+							)}
+							{selectedCode && (
+								<div className="flex items-center w-full py-4 text-sm font-semibold border-b border-gray-300 lg:py-5 lg:px-3 text-heading last:border-b-0 last:text-base last:pb-0">
+									{code_data.title} Discount ({code_data.off}%)
+									<span className="ml-2 text-red-600">
+										-&pound;{percent_price_to_deduct}
+									</span>
 								</div>
 							)}
 							<div className="flex items-center w-full py-4 text-sm font-semibold border-b border-gray-300 lg:py-5 lg:px-3 text-heading last:border-b-0 last:text-base last:pb-0">
