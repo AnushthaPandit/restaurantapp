@@ -70,7 +70,13 @@ const Checkout = () => {
 		const name = formState.name.trim();
 		const address = formState.address.trim();
 		const city = formState.city.trim();
-		const contact = formState.contact.trim();
+
+		if (!/^\d{10}$/.test(formState.contact)) {
+			alert("contact should be 10 digist number!!");
+			return;
+		}
+
+		const contact = formState.contact;
 		const postcode = formState.postcode.trim();
 
 		if (!name || !address || !city) {

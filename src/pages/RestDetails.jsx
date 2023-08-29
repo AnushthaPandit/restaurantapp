@@ -96,7 +96,7 @@ const RestDetails = () => {
 				const profData = await fetchProfileData(id);
 
 				setrestDetails(profData);
-				setfoodItems(data);
+				setfoodItems(data.filter((v) => v.isInStock));
 			} catch (error) {
 			} finally {
 				setisLoading(false);
