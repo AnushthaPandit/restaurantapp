@@ -10,9 +10,8 @@ import {
 } from "../schemas/checkout.schema";
 import { insert_order_data } from "../schemas/orders.schema";
 import { fetchAllCodesData } from "../schemas/promo_codes.schema";
+import { update_checkout } from "../schemas/checkout.schema";
 import { useStateValue } from "../context/StateProvider";
-
-import qr_image from "../img/qr_code_barcode.jpg";
 
 const Checkout = () => {
 	const [{ user }] = useStateValue();
@@ -108,13 +107,10 @@ const Checkout = () => {
 			percent_price_to_deduct,
 		};
 
-		await insert_order_data(dt);
-		await delete_checkout(checkout_doc_id);
-
+		await update_checkout(dt, checkout_doc_id);
 		setorderLoading(false);
 
-		alert("You're oreder has been placed!!");
-		navigate("/restaurant/" + details.rest_doc_id);
+		navigate("/pay/" + checkout_doc_id);
 	};
 
 	const handleChange = (e) => {
@@ -264,11 +260,6 @@ const Checkout = () => {
 										/>
 									</div>
 								</div>
-
-								<center>
-									<h3>Please Pay your bill using below qr code</h3>
-									<img src={qr_image} alt="qr code" />
-								</center>
 
 								<div className="mt-4">
 									<button

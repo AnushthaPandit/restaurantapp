@@ -4,6 +4,7 @@ import { AnimatePresence } from "framer-motion";
 
 import RestaurantList from "./pages/RestaurantList";
 import Checkout from "./pages/Checkout";
+import Payment from "./pages/Payment";
 import RestDetails from "./pages/RestDetails";
 import CustomerOrdersList from "./pages/OrderList";
 import RestLogin from "./pages/RestLogin";
@@ -56,6 +57,14 @@ const App = () => {
 						element={
 							<PrivateRoute role="user">
 								<Checkout />
+							</PrivateRoute>
+						}
+					/>
+					<Route
+						path="/pay/:checkout_id"
+						element={
+							<PrivateRoute role="user">
+								<Payment />
 							</PrivateRoute>
 						}
 					/>

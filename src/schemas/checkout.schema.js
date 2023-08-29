@@ -3,7 +3,8 @@ import {
 	getDoc,
 	doc,
 	deleteDoc,
-    addDoc,
+	addDoc,
+	setDoc,
 } from "firebase/firestore";
 import { firestore } from "../firebase.config";
 
@@ -13,12 +14,17 @@ const checkout_schema = {
 };
 
 export const insert_checkout_data = async (data) => {
-	const collRef = collection(firestore, checkout_schema.name)
-    const docRef = await addDoc(collRef, data);
+	const collRef = collection(firestore, checkout_schema.name);
+	const docRef = await addDoc(collRef, data);
 
-    return docRef.id;
+	return docRef.id;
 };
 
+export const update_checkout = async (data, doc_id) => {
+	await setDoc(doc(firestore, checkout_schema.name, doc_id), data, {
+		merge: true,
+	});
+};
 
 export const fetch_checkout_by_id = async (doc_id) => {
 	const docRef = doc(firestore, checkout_schema.name, doc_id);

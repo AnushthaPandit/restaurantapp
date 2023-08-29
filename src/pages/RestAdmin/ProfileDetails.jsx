@@ -281,7 +281,25 @@ const ProfileDetails = () => {
 							<label
 								className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
 								for="grid-zip">
-								Zip
+								Country
+							</label>
+							<input
+								value={formState.country}
+								onChange={handleChange}
+								name="country"
+								className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4"
+								type="text"
+								placeholder="britain"
+								required
+							/>
+						</div>
+					</div>
+					<div style={{ gap: "1rem" }} className="flex">
+						<div className="flex flex-col rounded">
+							<label
+								className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+								for="grid-zip">
+								Postcode
 							</label>
 							<input
 								value={formState.zip}
@@ -294,8 +312,6 @@ const ProfileDetails = () => {
 								required
 							/>
 						</div>
-					</div>
-					<div style={{ gap: "1rem" }} className="flex">
 						<div className="flex items-center pl-4 rounded">
 							<input
 								checked={formState.veg}
